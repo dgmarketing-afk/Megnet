@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing Health Check | DG Media House</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    /* Brand Palette */
+    --bg: #fafafa;
+    --bg-soft: #f3f3fb;
+    --bg-card: #ffffff;
+    --primary: #4040cc;
+    --primary-dark: #3232a0;
+    --primary-soft: #e8e8fa;
+    --primary-wash: #f3f3fb;
+    --accent-blue: #99bbe0;
+    --accent-blue-soft: #e1ecf7;
+    --accent-cream: #f2d6a2;
+    --accent-warm: #f7aa29;
+    --dark: #32323c;
+    --text-primary: #32323c;
+    --text-secondary: #5d5d6e;
+    --text-muted: #8b8b99;
+    --border: #eeeeee;
+    --border-strong: #d9d9d9;
+    --success: #16a34a;
+    --warning: #f7aa29;
+    --danger: #ef4444;
+    --critical: #b91c1c;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: -40%;
+    left: -10%;
+    width: 120%;
+    height: 80%;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(64, 64, 204, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(153, 187, 224, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .screen { display: none; animation: fadeIn 0.5s ease-out; }
+  .screen.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Header / Brand */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: white;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 14px rgba(64, 64, 204, 0.25);
+  }
+  .brand-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--dark);
+    letter-spacing: -0.2px;
+  }
+  .brand-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+  }
+  .edit-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+  }
+  .edit-btn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
+  .edit-btn .edit-icon {
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  /* Password Modal */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(50, 50, 60, 0.5);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .pin-modal {
+    background: white;
+    border-radius: 22px;
+    padding: 36px 32px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    animation: modalIn 0.25s ease-out;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.94) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .lock-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 18px;
+    background: var(--primary-soft);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--primary);
+  }
+  .pin-modal h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--dark);
+    font-weight: 700;
+    letter-spacing: -0.4px;
+  }
+  .pin-modal p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+  .pin-input-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .pin-digit {
+    width: 52px;
+    height: 60px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-soft);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    color: var(--primary);
+    transition: all 0.15s ease;
+    -moz-appearance: textfield;
+  }
+  .pin-digit::-webkit-outer-spin-button,
+  .pin-digit::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .pin-digit:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(64, 64, 204, 0.1);
+  }
+  .pin-digit.filled {
+    background: white;
+    border-color: var(--primary);
+  }
+  .pin-error {
+    color: var(--danger);
+    font-size: 13px;
+    margin-bottom: 16px;
+    min-height: 18px;
+    font-weight: 500;
+  }
+  .pin-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .pin-modal .btn { padding: 11px 22px; font-size: 14px; }
+  .shake { animation: shake 0.35s ease-in-out; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
+
+  /* Landing */
+  .landing-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: var(--primary-soft);
+    border-radius: 100px;
+    color: var(--primary);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .landing-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--primary);
+    border-radius: 50%;
+  }
+  h1 {
+    font-size: clamp(34px, 5.2vw, 56px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--dark);
+    letter-spacing: -1.2px;
+  }
+  h1 .accent {
+    color: var(--primary);
+    position: relative;
+    display: inline-block;
+  }
+  h1 .accent::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: var(--accent-cream);
+    z-index: -1;
+    opacity: 0.6;
+    border-radius: 4px;
+  }
+  .lead {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    max-width: 600px;
+    line-height: 1.65;
+  }
+
+  /* Floating decoration badges */
+  .float-deco {
+    position: relative;
+    margin-bottom: 36px;
+  }
+  .deco-badge {
+    position: absolute;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    animation: float 3s ease-in-out infinite;
+  }
+  .deco-badge .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .stat {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 18px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+  }
+  .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 4px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.5px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .features {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 36px;
+    box-shadow: 0 4px 24px rgba(64, 64, 204, 0.04);
+  }
+  .features-title {
+    font-size: 13px;
+    color: var(--primary);
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .features-title::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    background: var(--primary);
+  }
+  .features ul { list-style: none; }
+  .features li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 15px;
+    color: var(--text-secondary);
+  }
+  .features li:last-child { border-bottom: none; }
+  .check {
+    width: 24px; height: 24px;
+    background: var(--primary-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 6px 18px rgba(64, 64, 204, 0.25);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px rgba(64, 64, 204, 0.35);
+    background: var(--primary-dark);
+  }
+  .btn-secondary {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-secondary:hover {
+    background: var(--bg-soft);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .btn-large { padding: 16px 36px; font-size: 16px; }
+  .btn-disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+  .micro {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 14px;
+  }
+
+  /* Quiz */
+  .progress-wrap {
+    margin-bottom: 36px;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .progress-info .primary { color: var(--primary); font-weight: 700; }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-blue) 0%, var(--primary) 100%);
+    border-radius: 100px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .q-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: var(--accent-blue-soft);
+    color: var(--primary);
+    border-radius: 100px;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .q-title {
+    font-size: clamp(22px, 3.2vw, 30px);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+  }
+  .q-sub {
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .option {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .option:hover {
+    border-color: var(--primary);
+    transform: translateX(3px);
+    box-shadow: 0 6px 18px rgba(64, 64, 204, 0.06);
+  }
+  .option.selected {
+    background: var(--primary-wash);
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px rgba(64, 64, 204, 0.08);
+  }
+  .option-radio {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border-strong);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.15s ease;
+  }
+  .option.selected .option-radio {
+    border-color: var(--primary);
+    background: var(--primary);
+  }
+  .option.selected .option-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    background: white;
+    border-radius: 50%;
+  }
+  .option-text {
+    font-size: 15px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  /* Email capture */
+  .capture-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 44px 36px;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(64, 64, 204, 0.06);
+  }
+  .capture-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 22px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 28px;
+    box-shadow: 0 8px 24px rgba(64, 64, 204, 0.3);
+  }
+  .form-group {
+    margin-bottom: 14px;
+    text-align: left;
+  }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--bg-soft);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(64, 64, 204, 0.08);
+  }
+  .form-group input::placeholder { color: var(--text-muted); }
+
+  /* Results */
+  .result-hero {
+    background: linear-gradient(180deg, white 0%, var(--bg-soft) 100%);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 44px 32px;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(64, 64, 204, 0.04);
+  }
+  .result-hero::before {
+    content: '';
+    position: absolute;
+    top: -40%; right: -20%;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(64, 64, 204, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .score-circle {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+  .score-circle svg { transform: rotate(-90deg); }
+  .score-track { stroke: var(--border); }
+  .score-fill { stroke: var(--primary); transition: stroke-dashoffset 1.2s ease; }
+  .score-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .score-num {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--primary);
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+  .score-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .result-tier {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+  .tier-healthy { background: #dcfce7; color: #15803d; }
+  .tier-warning { background: #fef3c7; color: #b45309; }
+  .tier-critical { background: #fee2e2; color: #b91c1c; }
+  .tier-emergency { background: #fecaca; color: #991b1b; }
+  .result-headline {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+  }
+  .result-desc {
+    color: var(--text-secondary);
+    font-size: 15px;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Gap section */
+  .gaps-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  .gaps-title {
+    font-size: 13px;
+    color: var(--primary);
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .gaps-title::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    background: var(--primary);
+  }
+  .gap-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .gap-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .gap-item:first-child { padding-top: 0; }
+  .gap-icon {
+    width: 30px; height: 30px;
+    background: #fee2e2;
+    color: var(--danger);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .gap-icon.ok { background: #dcfce7; color: var(--success); }
+  .gap-icon.more { background: var(--primary-soft); color: var(--primary); }
+  .gap-content { flex: 1; }
+  .gap-name {
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 15px;
+    color: var(--dark);
+  }
+  .gap-fix {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* CTA */
+  .cta-card {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 22px;
+    padding: 40px 32px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 50px rgba(64, 64, 204, 0.25);
+  }
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-card::after {
+    content: '';
+    position: absolute;
+    bottom: -50%; left: -10%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(153, 187, 224, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-title {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .cta-title .highlight {
+    background: var(--accent-cream);
+    color: var(--dark);
+    padding: 2px 10px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .cta-desc {
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 26px;
+    font-size: 15px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.65;
+    position: relative;
+  }
+  .cta-card .btn-primary {
+    background: white;
+    color: var(--primary);
+    position: relative;
+  }
+  .cta-card .btn-primary:hover {
+    background: var(--accent-cream);
+    color: var(--dark);
+  }
+  .cta-perks {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    position: relative;
+  }
+  .perk {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+  }
+  .perk-icon {
+    color: var(--accent-cream);
+    font-weight: 800;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .footer a { color: var(--primary); text-decoration: none; font-weight: 500; }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .container { padding: 24px 16px; }
+    .nav { margin-bottom: 32px; }
+    .nav-pill { display: none; }
+    .stats { grid-template-columns: 1fr; gap: 10px; }
+    .stat { padding: 16px; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+    .stat-num { font-size: 22px; margin-bottom: 0; }
+    .features, .capture-card, .result-hero, .cta-card { padding: 24px 22px; }
+    .cta-perks { gap: 14px; }
+    h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Nav / Brand -->
+  <div class="nav">
+    <div class="brand">
+      <div class="brand-logo">DG</div>
+      <div>
+        <div class="brand-name">DG Media House</div>
+        <div class="brand-sub">Data-Driven Marketing</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-pill">Marketing Health Check</div>
+      <button class="edit-btn" onclick="openAdminModal('editor')" title="แก้ไขคำถาม">
+        <span class="edit-icon">✎</span>
+        <span>Edit</span>
+      </button>
+      <button class="edit-btn" onclick="openAdminModal('dashboard')" title="ดู Lead Dashboard">
+        <span class="edit-icon">⊞</span>
+        <span>Dashboard</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Password Modal -->
+  <div class="modal-bg" id="admin-modal">
+    <div class="pin-modal">
+      <div class="lock-icon">🔒</div>
+      <h3 id="pin-modal-title">Admin Access</h3>
+      <p id="pin-modal-subtitle">กรอกรหัสผ่าน 4 หลัก เพื่อเข้าสู่หน้าแก้ไขคำถาม</p>
+      <div class="pin-input-group" id="pin-input-group">
+        <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-digit" data-index="0">
+        <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-digit" data-index="1">
+        <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-digit" data-index="2">
+        <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-digit" data-index="3">
+      </div>
+      <div class="pin-error" id="pin-error"></div>
+      <div class="pin-modal-actions">
+        <button class="btn btn-secondary" onclick="closeAdminModal()">ยกเลิก</button>
+        <button class="btn btn-primary" onclick="verifyPin()">ยืนยัน</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SCREEN 1: LANDING ====== -->
+  <div class="screen active" id="screen-landing">
+    <span class="landing-badge">Self-Check · ใช้เวลา 5 นาที</span>
+    <h1>คุณ <span class="accent">"มองเห็น"</span> การตลาดของแบรนด์ตัวเองชัดแค่ไหน?</h1>
+    <p class="lead">บางครั้งสิ่งที่เราคิดว่า "น่าจะโอเค" อาจมีจุดที่มองไม่เห็นอยู่ ลองตอบ 10 คำถามสั้นๆ เพื่อเช็คตัวเองดู — อาจเจอบางมุมที่ไม่เคยคิดถึง</p>
+
+    <div class="stats">
+      <div class="stat">
+        <div>
+          <div class="stat-num">10</div>
+          <div class="stat-label">คำถาม<br>เช็คตัวเอง</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div>
+          <div class="stat-num">~5 นาที</div>
+          <div class="stat-label">ใช้เวลา<br>ไม่นาน</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div>
+          <div class="stat-num">0 ฿</div>
+          <div class="stat-label">ไม่มีค่าใช้จ่าย<br>ไม่ต้องลงทะเบียน</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="features-title">เครื่องมือนี้เหมาะกับใคร</div>
+      <ul>
+        <li><span class="check">✓</span>เจ้าของแบรนด์ที่อยากเข้าใจการตลาดของตัวเองในมุมตัวเลข</li>
+        <li><span class="check">✓</span>SME ที่ใช้งบ Marketing แต่ยังไม่แน่ใจว่ามองเห็นภาพรวมพอไหม</li>
+        <li><span class="check">✓</span>คนที่กำลังคิดจะปรับโครงสร้างการตลาด แต่ยังไม่รู้จะเริ่มตรงไหน</li>
+        <li><span class="check">✓</span>คนที่อยากรู้ว่าแบรนด์ของตัวเอง "อยู่จุดไหน" เมื่อเทียบกับมาตรฐาน</li>
+      </ul>
+    </div>
+
+    <button class="btn btn-primary btn-large" onclick="startQuiz()">
+      ลองเช็คดู →
+    </button>
+    <p class="micro">ผลลัพธ์เป็นแค่ภาพสะท้อน ไม่มีถูกผิด · ใช้เพื่อเข้าใจตัวเองมากขึ้น</p>
+  </div>
+
+  <!-- ====== SCREEN 2: QUIZ ====== -->
+  <div class="screen" id="screen-quiz">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span>Marketing Health Check</span>
+        <span><span class="primary" id="q-current">1</span> / <span id="q-total">10</span></span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="question-container"></div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" id="btn-back" onclick="prevQuestion()">← ย้อนกลับ</button>
+      <button class="btn btn-primary btn-disabled" id="btn-next" onclick="nextQuestion()">ถัดไป →</button>
+    </div>
+  </div>
+
+  <!-- ====== SCREEN 3: EMAIL CAPTURE ====== -->
+  <div class="screen" id="screen-capture">
+    <div class="capture-card">
+      <div class="capture-icon">✦</div>
+      <h2 style="font-size: 26px; margin-bottom: 12px; color: var(--dark); letter-spacing: -0.5px;">เกือบเสร็จแล้ว</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 28px; line-height: 1.6;">ก่อนดูผล ฝากชื่อกับช่องทางติดต่อไว้หน่อย เผื่อเราอยากส่งข้อมูลเพิ่มเติม<br>ที่เกี่ยวข้องกับผลของคุณไปให้ (ไม่บังคับนะคะ ข้ามไปก็ได้)</p>
+
+      <div class="form-group">
+        <label>ชื่อเรียกของคุณ</label>
+        <input type="text" id="user-name" placeholder="เช่น คุณสมชาย หรือเรียกว่าอะไรก็ได้">
+      </div>
+      <div class="form-group">
+        <label>ชื่อแบรนด์ของคุณ</label>
+        <input type="text" id="user-brand" placeholder="ชื่อแบรนด์/บริษัท">
+      </div>
+      <div class="form-group">
+        <label>อีเมล</label>
+        <input type="email" id="user-email" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>LINE ID หรือเบอร์โทร (ถ้าสะดวก)</label>
+        <input type="text" id="user-phone" placeholder="ไม่บังคับ">
+      </div>
+
+      <button class="btn btn-primary btn-large" style="width: 100%; margin-top: 12px;" onclick="showResults()">
+        ดูผลของฉัน →
+      </button>
+      <p class="micro" style="margin-top: 14px;">
+        <a href="#" onclick="skipCapture(event)" style="color: var(--text-muted); text-decoration: underline;">ข้ามไป ขอดูผลเลย</a>
+        · ข้อมูลของคุณจะถูกเก็บอย่างปลอดภัย
+      </p>
+    </div>
+  </div>
+
+  <!-- ====== SCREEN 4: RESULTS ====== -->
+  <div class="screen" id="screen-results">
+    <!-- Score Hero -->
+    <div class="result-hero">
+      <div class="score-circle">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle class="score-track" cx="90" cy="90" r="78" fill="none" stroke-width="10"/>
+          <circle class="score-fill" id="score-fill" cx="90" cy="90" r="78" fill="none" stroke-width="10" stroke-linecap="round"
+                  stroke-dasharray="490" stroke-dashoffset="490"/>
+        </svg>
+        <div class="score-text">
+          <div class="score-num" id="score-num">0</div>
+          <div class="score-label">/ 100</div>
+        </div>
+      </div>
+      <div class="result-tier" id="result-tier">PROCESSING</div>
+      <h2 class="result-headline" id="result-headline">Marketing Health Score</h2>
+      <p class="result-desc" id="result-desc">กำลังประมวลผล...</p>
+    </div>
+
+    <!-- Gap Analysis -->
+    <div class="gaps-card">
+      <div class="gaps-title">จุดที่แบรนด์ของคุณขาด · Gap Analysis</div>
+      <div id="gaps-list"></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-card">
+      <h3 class="cta-title">อยากคุยเรื่องผลของคุณ <span class="highlight">เพิ่มเติมไหม?</span></h3>
+      <p class="cta-desc">ถ้ามีจุดไหนที่อยากเข้าใจมากขึ้น หรืออยากรู้ว่าจะเริ่มแก้ที่ไหนก่อนดี ทีมเรายินดีคุยให้ฟัง 30 นาที โดยไม่มีค่าใช้จ่าย และไม่มีการขายอะไรทั้งสิ้น</p>
+
+      <a href="#" class="btn btn-primary btn-large" id="cta-link" onclick="bookConsult(event)">
+        นัดคุย 30 นาที (ไม่ขายของ) →
+      </a>
+
+      <div class="cta-perks">
+        <div class="perk"><span class="perk-icon">✓</span> คุยแบบเป็นกันเอง</div>
+        <div class="perk"><span class="perk-icon">✓</span> ไม่ใช่ Sales Call</div>
+        <div class="perk"><span class="perk-icon">✓</span> ได้มุมมองกลับไปคิด</div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 24px;">
+      <button class="btn btn-secondary" onclick="restart()">ทำแบบทดสอบใหม่</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    © 2026 DG Media House · Data-Driven Marketing Agency for SME<br>
+    <a href="mailto:dg.marketing@dgmediahouse.co.th">dg.marketing@dgmediahouse.co.th</a>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const SHEETS_WEBHOOK_URL = '';
+const STORAGE_KEY = 'dgmh_marketing_audit_leads';
+
+// ========== QUIZ DATA ==========
+const questions = [
+  {
+    category: "Real-time Visibility",
+    pill: "01 · Real-time Tracking",
+    title: "คุณดูตัวเลข Ad Spend, ยอดขาย และ KPI ของแบรนด์ได้แบบ Real-time ไหม?",
+    sub: "ลองนึกภาพ: ตอนนี้ถ้าลูกค้าโทรถามว่า 'แคมเปญนี้ใช้งบไปเท่าไหร่แล้ว?' คุณตอบได้ภายในกี่นาที?",
+    options: [
+      { text: "ดูได้ทันที — มีแดชบอร์ด real-time", score: 10 },
+      { text: "ดูได้ แต่ต้องรอ report รายสัปดาห์", score: 6 },
+      { text: "ต้องรอสรุปสิ้นเดือน", score: 3 },
+      { text: "ไม่มีระบบ tracking ที่เป็นระบบ", score: 0 }
+    ]
+  },
+  {
+    category: "Budget Control",
+    pill: "02 · Budget Management",
+    title: "ตอนนี้คุณรู้ไหมว่า งบ Marketing ใช้ไปกี่ % แล้ว และเหลืออีกเท่าไหร่?",
+    sub: "การ control budget แบบ real-time ช่วยให้ตัดสินใจปรับแคมเปญได้ทันก่อนเงินจะหมด",
+    options: [
+      { text: "รู้แบบ real-time แยกตามแคมเปญ/ช่องทาง", score: 10 },
+      { text: "รู้คร่าวๆ ต้องคำนวณ Excel เอง", score: 6 },
+      { text: "รู้ตอนสิ้นเดือนหลังบัญชีสรุป", score: 3 },
+      { text: "ไม่ได้ติดตามอย่างเป็นระบบ", score: 0 }
+    ]
+  },
+  {
+    category: "KPI Framework",
+    pill: "03 · KPI Setting",
+    title: "แบรนด์ของคุณมี KPI การตลาดที่ชัดเจน วัดผลได้ และทบทวนสม่ำเสมอไหม?",
+    sub: "KPI ที่ดี = ต้องเฉพาะเจาะจง วัดได้เป็นตัวเลข และมี timeline ชัดเจน",
+    options: [
+      { text: "มี KPI ชัด + ทบทวนทุกสัปดาห์/เดือน", score: 10 },
+      { text: "มี KPI แต่ไม่ได้ทบทวนสม่ำเสมอ", score: 6 },
+      { text: "มี KPI กว้างๆ เช่น 'ขายให้ได้เยอะๆ'", score: 3 },
+      { text: "ยังไม่มี KPI ที่ชัดเจน", score: 0 }
+    ]
+  },
+  {
+    category: "Forecast",
+    pill: "04 · Forecasting",
+    title: "คุณมีการ Forecast ยอดขายและงบ Marketing ล่วงหน้า 3-6 เดือนไหม?",
+    sub: "Forecast สไตล์ Finance ทำให้รู้ว่าต้องลงงบเท่าไหร่ ถึงจะได้ยอดขายตามเป้า",
+    options: [
+      { text: "มี Forecast แบบ Finance พร้อม assumption ครบ", score: 10 },
+      { text: "คาดการณ์คร่าวๆ จากปีก่อน", score: 6 },
+      { text: "ใช้ gut feeling ของเจ้าของ", score: 3 },
+      { text: "ไม่มี Forecast เลย", score: 0 }
+    ]
+  },
+  {
+    category: "Data Integration",
+    pill: "05 · Online + Offline Data",
+    title: "Data ออนไลน์ (Ads, Social, Web) + ออฟไลน์ (POS, หน้าร้าน) ของคุณดูที่เดียวกันได้ไหม?",
+    sub: "SME ส่วนใหญ่มี data กระจัดกระจาย ทำให้เห็นภาพไม่ครบและตัดสินใจช้า",
+    options: [
+      { text: "ดูในแดชบอร์ดเดียว online + offline รวมกัน", score: 10 },
+      { text: "ดูได้แต่ต้องสลับหลายระบบ/หลายไฟล์", score: 6 },
+      { text: "มีแต่ online data ส่วน offline ดูยาก", score: 3 },
+      { text: "ไม่มีระบบรวม data เลย", score: 0 }
+    ]
+  },
+  {
+    category: "MROI",
+    pill: "06 · Marketing ROI",
+    title: "คุณรู้ไหมว่าทุก ฿1 ที่ลงทุน Marketing สร้าง MROI กี่บาทกลับมา?",
+    sub: "MROI = Marketing Return on Investment เป็นตัวเลขที่นักการเงินใช้วัดประสิทธิภาพการตลาด",
+    options: [
+      { text: "คำนวณได้รายแคมเปญและรายช่องทาง", score: 10 },
+      { text: "รู้ภาพรวมแต่ไม่ลึกถึงรายแคมเปญ", score: 6 },
+      { text: "คำนวณยาก ใช้เวลานานกว่าจะรู้", score: 3 },
+      { text: "ไม่เคยคำนวณ MROI", score: 0 }
+    ]
+  },
+  {
+    category: "Growth Tracking",
+    pill: "07 · Growth %",
+    title: "คุณติดตาม Growth % ยอดขาย MoM (เทียบเดือนก่อน) และ YoY (เทียบปีก่อน) อย่างเป็นระบบไหม?",
+    sub: "การเห็นเส้นเติบโตชัดๆ ทำให้รู้ว่ากำลังไปถูกทาง หรือกำลังถดถอย",
+    options: [
+      { text: "มีแดชบอร์ดดูได้ทุกวัน + เปรียบเทียบหลายมิติ", score: 10 },
+      { text: "ดู Excel ทุกสิ้นเดือน", score: 6 },
+      { text: "ดูเป็นบางครั้ง ไม่สม่ำเสมอ", score: 3 },
+      { text: "ไม่ได้ติดตาม growth อย่างเป็นระบบ", score: 0 }
+    ]
+  },
+  {
+    category: "Collaboration Framework",
+    pill: "08 · Brand × Agency Framework",
+    title: "การทำงานระหว่างคุณกับทีม Marketing/Agency มี Framework และ Process ชัดเจนไหม?",
+    sub: "ไม่มี framework = สื่อสารตกหล่น งานช้า ผลลัพธ์ไม่นิ่ง",
+    options: [
+      { text: "มี process, document, ระบบติดตามชัดเจน", score: 10 },
+      { text: "มีคุยกัน แต่ไม่ได้เป็นทางการ", score: 6 },
+      { text: "คุยเฉพาะตอนมีปัญหา", score: 3 },
+      { text: "ไม่มี framework การทำงานร่วมกัน", score: 0 }
+    ]
+  },
+  {
+    category: "Strategic Direction",
+    pill: "09 · Marketing Strategy",
+    title: "แบรนด์ของคุณมีทิศทาง/Marketing Strategy 6-12 เดือนข้างหน้าชัดไหม?",
+    sub: "การตลาดไร้ทิศทาง = ใช้เงินแบบเดือนต่อเดือน ไม่มี momentum",
+    options: [
+      { text: "มี Strategy + Roadmap ชัดเจน 6-12 เดือน", score: 10 },
+      { text: "มีคร่าวๆ ไตรมาสต่อไตรมาส", score: 6 },
+      { text: "ทำตามสถานการณ์ ไม่มีแผนยาว", score: 3 },
+      { text: "ยังไม่มีทิศทางที่ชัดเจน", score: 0 }
+    ]
+  },
+  {
+    category: "Team Resource",
+    pill: "10 · Team & Resources",
+    title: "ทีม Marketing ของคุณตอนนี้ครอบคลุมงานทั้ง Strategy, Data, Content, Ads ไหม?",
+    sub: "SME ส่วนใหญ่มีคนน้อย ทำให้บางส่วนถูกละเลย เช่น การวัดผล หรือ forecast",
+    options: [
+      { text: "ทีมเพียงพอ ครอบคลุมทุกฟังก์ชัน", score: 10 },
+      { text: "ทีมเล็ก แต่จัดการได้พอเหมาะ", score: 6 },
+      { text: "คนน้อย ทำไม่ทัน ขาดบางส่วน", score: 3 },
+      { text: "ทำเองคนเดียว / ไม่มีทีม Marketing", score: 0 }
+    ]
+  }
+];
+
+// ========== STATE ==========
+let currentQ = 0;
+const answers = new Array(questions.length).fill(null);
+
+document.getElementById('q-total').textContent = questions.length;
+
+// ========== FUNCTIONS ==========
+function startQuiz() {
+  document.getElementById('screen-landing').classList.remove('active');
+  document.getElementById('screen-quiz').classList.add('active');
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('q-current').textContent = currentQ + 1;
+  document.getElementById('progress-fill').style.width = ((currentQ + 1) / questions.length * 100) + '%';
+
+  let html = `
+    <span class="q-pill">${q.pill}</span>
+    <h2 class="q-title">${q.title}</h2>
+    <p class="q-sub">${q.sub}</p>
+    <div class="options">
+  `;
+  q.options.forEach((opt, i) => {
+    const selected = answers[currentQ] === i ? 'selected' : '';
+    html += `
+      <div class="option ${selected}" onclick="selectOption(${i})">
+        <div class="option-radio"></div>
+        <div class="option-text">${opt.text}</div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+  document.getElementById('question-container').innerHTML = html;
+
+  document.getElementById('btn-back').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = currentQ === questions.length - 1 ? 'ดูผลลัพธ์ →' : 'ถัดไป →';
+  updateNextBtn();
+}
+
+function selectOption(i) {
+  answers[currentQ] = i;
+  renderQuestion();
+}
+
+function updateNextBtn() {
+  const btn = document.getElementById('btn-next');
+  if (answers[currentQ] === null) btn.classList.add('btn-disabled');
+  else btn.classList.remove('btn-disabled');
+}
+
+function nextQuestion() {
+  if (answers[currentQ] === null) return;
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    document.getElementById('screen-quiz').classList.remove('active');
+    document.getElementById('screen-capture').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function showResults() {
+  const name = document.getElementById('user-name').value.trim();
+  const email = document.getElementById('user-email').value.trim();
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('รูปแบบอีเมลไม่ถูกต้องค่ะ');
+    return;
+  }
+  if (name || email) saveLeadData(false);
+  goToResults();
+}
+
+function skipCapture(e) {
+  if (e) e.preventDefault();
+  saveLeadData(true);
+  goToResults();
+}
+
+function goToResults() {
+  document.getElementById('screen-capture').classList.remove('active');
+  document.getElementById('screen-results').classList.add('active');
+  computeResults();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// LEAD DATA STORAGE
+// ============================================================
+function saveLeadData(isAnonymous) {
+  let total = 0;
+  const detailedAnswers = [];
+  answers.forEach((a, i) => {
+    if (a !== null) {
+      const score = questions[i].options[a].score;
+      total += score;
+      detailedAnswers.push({
+        category: questions[i].category,
+        question: questions[i].title,
+        answer: questions[i].options[a].text,
+        score: score
+      });
+    }
+  });
+
+  let tier;
+  if (total >= 75) tier = 'Healthy';
+  else if (total >= 50) tier = 'Warning';
+  else if (total >= 25) tier = 'Critical';
+  else tier = 'Emergency';
+
+  const leadData = {
+    id: 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+    timestamp: new Date().toISOString(),
+    timestamp_th: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
+    anonymous: isAnonymous,
+    name: isAnonymous ? '' : document.getElementById('user-name').value.trim(),
+    brand: isAnonymous ? '' : document.getElementById('user-brand').value.trim(),
+    email: isAnonymous ? '' : document.getElementById('user-email').value.trim(),
+    phone: isAnonymous ? '' : document.getElementById('user-phone').value.trim(),
+    score: total,
+    tier: tier,
+    answers: answers.slice(),
+    details: detailedAnswers,
+    user_agent: navigator.userAgent,
+    referrer: document.referrer || 'direct'
+  };
+
+  try {
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    existing.push(leadData);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+  } catch (err) { console.warn('localStorage save failed:', err); }
+
+  if (SHEETS_WEBHOOK_URL && SHEETS_WEBHOOK_URL.startsWith('http')) {
+    fetch(SHEETS_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(leadData)
+    }).catch(err => console.warn('Webhook submit failed (data saved locally):', err));
+  }
+  window.__currentLeadId = leadData.id;
+}
+
+function computeResults() {
+  let total = 0;
+  answers.forEach((a, i) => {
+    if (a !== null) total += questions[i].options[a].score;
+  });
+
+  let displayScore = 0;
+  const target = total;
+  const interval = setInterval(() => {
+    displayScore += 2;
+    if (displayScore >= target) {
+      displayScore = target;
+      clearInterval(interval);
+    }
+    document.getElementById('score-num').textContent = displayScore;
+  }, 30);
+
+  const circumference = 490;
+  const offset = circumference - (total / 100) * circumference;
+  setTimeout(() => {
+    document.getElementById('score-fill').style.strokeDashoffset = offset;
+  }, 100);
+
+  let tier, tierClass, headline, desc, color;
+  if (total >= 75) {
+    tier = 'HEALTHY · ระบบดี';
+    tierClass = 'tier-healthy';
+    headline = 'แบรนด์ของคุณ "วัดผลได้"';
+    desc = 'ระบบ Marketing ของคุณอยู่ในเกณฑ์ดี มีการวัดผลและทิศทางที่ชัด อย่างไรก็ตาม ยังมีจุดเล็กๆ ที่ปรับเพิ่มแล้วจะทำให้การเติบโตเร่งขึ้นได้อีก';
+    color = 'var(--success)';
+  } else if (total >= 50) {
+    tier = 'WARNING · ต้องปรับ';
+    tierClass = 'tier-warning';
+    headline = 'แบรนด์ของคุณ "เห็นบางส่วน"';
+    desc = 'คุณมีระบบบางอย่างแล้ว แต่ยังมีจุดสำคัญที่ขาดไป โดยเฉพาะด้าน Data Integration และ MROI ทำให้ตัดสินใจช้าและพลาดโอกาสเติบโต';
+    color = 'var(--warning)';
+  } else if (total >= 25) {
+    tier = 'CRITICAL · ขาดหลายจุด';
+    tierClass = 'tier-critical';
+    headline = 'แบรนด์ของคุณ "มองไม่เห็นภาพรวม"';
+    desc = 'ระบบ Marketing ของคุณยังขาดเครื่องมือและ Process หลายจุด ทำให้ใช้เงินไม่คุ้ม และไม่รู้ว่าแคมเปญไหนได้ผลจริง เสี่ยงต่อการเสียโอกาสคู่แข่ง';
+    color = 'var(--danger)';
+  } else {
+    tier = 'EMERGENCY · ต้องเริ่มใหม่';
+    tierClass = 'tier-emergency';
+    headline = 'แบรนด์ของคุณ "ทำการตลาดแบบสุ่ม"';
+    desc = 'คุณยังไม่มีระบบวัดผลที่ชัดเจน ทำให้ทุกๆ บาทที่ลง Marketing อาจสูญเปล่า การเริ่มต้นทำ Marketing Audit อย่างเป็นระบบจะเปลี่ยนสถานการณ์ได้ภายใน 30-60 วัน';
+    color = 'var(--critical)';
+  }
+
+  document.getElementById('result-tier').textContent = tier;
+  document.getElementById('result-tier').className = 'result-tier ' + tierClass;
+  document.getElementById('result-headline').textContent = headline;
+  document.getElementById('result-desc').textContent = desc;
+  document.getElementById('score-fill').style.stroke = color;
+
+  const gaps = [];
+  const remediation = [
+    "ติดตั้งระบบ Real-time Dashboard ดู ads spend + ยอดขายได้ทันที",
+    "เซ็ตระบบ Budget Tracking ที่อัปเดตอัตโนมัติทุกวัน",
+    "กำหนด KPI Framework สไตล์ OKR + ทบทวนรายสัปดาห์",
+    "สร้างโมเดล Forecast 6 เดือน พร้อม Sensitivity Analysis",
+    "เชื่อมต่อ Data ทุก channel (Online + Offline) ในแดชบอร์ดเดียว",
+    "เซ็ตอัป MROI Report รายแคมเปญและช่องทาง",
+    "สร้าง Growth Dashboard ดู MoM/YoY แบบ visual ชัดเจน",
+    "วาง Framework ทำงานร่วมกัน Brand × Agency พร้อม SOP",
+    "ร่าง Marketing Strategy + Roadmap 6-12 เดือน",
+    "วิเคราะห์ Resource Gap และเสริมทีมหรือ outsource ตรงจุด"
+  ];
+
+  answers.forEach((a, i) => {
+    const score = a !== null ? questions[i].options[a].score : 0;
+    if (score < 7) {
+      gaps.push({ name: questions[i].category, fix: remediation[i] || '—', critical: score < 4 });
+    }
+  });
+
+  let gapsHtml = '';
+  if (gaps.length === 0) {
+    gapsHtml = `
+      <div class="gap-item">
+        <div class="gap-icon ok">✓</div>
+        <div class="gap-content">
+          <div class="gap-name">ยอดเยี่ยม — ไม่พบจุดที่ขาดอย่างมีนัยสำคัญ</div>
+          <div class="gap-fix">แบรนด์ของคุณมีระบบครบถ้วน ทีมเราสามารถช่วยปรับให้ optimize ได้อีกขั้น</div>
+        </div>
+      </div>
+    `;
+  } else {
+    gaps.slice(0, 6).forEach(g => {
+      gapsHtml += `
+        <div class="gap-item">
+          <div class="gap-icon">${g.critical ? '!' : '⚠'}</div>
+          <div class="gap-content">
+            <div class="gap-name">${g.name}</div>
+            <div class="gap-fix">→ ${g.fix}</div>
+          </div>
+        </div>
+      `;
+    });
+    if (gaps.length > 6) {
+      gapsHtml += `
+        <div class="gap-item">
+          <div class="gap-icon more">+</div>
+          <div class="gap-content">
+            <div class="gap-name">และอีก ${gaps.length - 6} จุดที่ทีมเราอยากเล่าให้คุณฟัง</div>
+            <div class="gap-fix">→ จองนัด Free Consult เพื่อรับคำแนะนำเฉพาะแบรนด์ของคุณ</div>
+          </div>
+        </div>
+      `;
+    }
+  }
+  document.getElementById('gaps-list').innerHTML = gapsHtml;
+}
+
+function bookConsult(e) {
+  e.preventDefault();
+  const name = document.getElementById('user-name').value.trim();
+  const brand = document.getElementById('user-brand').value.trim();
+  const email = document.getElementById('user-email').value.trim();
+  const phone = document.getElementById('user-phone').value.trim();
+  const subject = encodeURIComponent('นัดคุย 30 นาที - Marketing Health Check');
+  const body = encodeURIComponent(
+    `สวัสดีค่ะ ทีม DG Media House\n\nฉันได้ทำ Marketing Health Check แล้ว\nและต้องการนัดคุย 30 นาที\n\nชื่อ: ${name}\nแบรนด์: ${brand}\nอีเมล: ${email}\nเบอร์ติดต่อ/LINE: ${phone}\nคะแนน: ${document.getElementById('score-num').textContent}/100\n\nกรุณาติดต่อกลับเพื่อนัดเวลาด้วยค่ะ`
+  );
+  window.location.href = `mailto:dg.marketing@dgmediahouse.co.th?subject=${subject}&body=${body}`;
+}
+
+function restart() {
+  currentQ = 0;
+  for (let i = 0; i < answers.length; i++) answers[i] = null;
+  document.getElementById('screen-results').classList.remove('active');
+  document.getElementById('screen-landing').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// ADMIN PIN GATE
+// ============================================================
+const ADMIN_PIN = '0922';
+const ADMIN_TARGETS = {
+  editor: {
+    file: 'DGMediaHouse-Question-Editor.html',
+    title: 'Admin · Question Editor',
+    subtitle: 'กรอกรหัสผ่าน 4 หลัก เพื่อเข้าสู่หน้าแก้ไขคำถาม'
+  },
+  dashboard: {
+    file: 'DGMediaHouse-Lead-Dashboard.html',
+    title: 'Admin · Lead Dashboard',
+    subtitle: 'กรอกรหัสผ่าน 4 หลัก เพื่อเข้าสู่หน้า Lead Dashboard'
+  }
+};
+let _adminTarget = 'editor';
+
+function openAdminModal(target) {
+  _adminTarget = ADMIN_TARGETS[target] ? target : 'editor';
+  const t = ADMIN_TARGETS[_adminTarget];
+  document.getElementById('pin-modal-title').textContent = t.title;
+  document.getElementById('pin-modal-subtitle').textContent = t.subtitle;
+  document.getElementById('admin-modal').classList.add('show');
+  clearPin();
+  setTimeout(() => {
+    const first = document.querySelector('.pin-digit[data-index="0"]');
+    if (first) first.focus();
+  }, 100);
+}
+
+function closeAdminModal() {
+  document.getElementById('admin-modal').classList.remove('show');
+  clearPin();
+}
+
+function clearPin() {
+  document.querySelectorAll('.pin-digit').forEach(d => {
+    d.value = '';
+    d.classList.remove('filled');
+  });
+  document.getElementById('pin-error').textContent = '';
+}
+
+function getPinValue() {
+  return Array.from(document.querySelectorAll('.pin-digit')).map(d => d.value).join('');
+}
+
+function verifyPin() {
+  const pin = getPinValue();
+  const errBox = document.getElementById('pin-error');
+  const group = document.getElementById('pin-input-group');
+
+  if (pin.length < 4) {
+    errBox.textContent = 'กรุณากรอกให้ครบ 4 หลัก';
+    group.classList.add('shake');
+    setTimeout(() => group.classList.remove('shake'), 400);
+    return;
+  }
+  if (pin === ADMIN_PIN) {
+    errBox.style.color = 'var(--success)';
+    const target = ADMIN_TARGETS[_adminTarget] || ADMIN_TARGETS.editor;
+    errBox.textContent = '✓ ถูกต้อง — กำลังเข้าสู่หน้า ' + (target === ADMIN_TARGETS.dashboard ? 'Dashboard' : 'แก้ไข') + '...';
+    setTimeout(() => { window.location.href = target.file; }, 600);
+  } else {
+    errBox.style.color = 'var(--danger)';
+    errBox.textContent = 'รหัสไม่ถูกต้อง ลองอีกครั้ง';
+    group.classList.add('shake');
+    setTimeout(() => {
+      group.classList.remove('shake');
+      clearPin();
+      const first = document.querySelector('.pin-digit[data-index="0"]');
+      if (first) first.focus();
+    }, 400);
+  }
+}
+
+// Auto-focus next digit + handle keyboard
+document.querySelectorAll('.pin-digit').forEach((input, idx, all) => {
+  input.addEventListener('input', e => {
+    const val = e.target.value.replace(/[^0-9]/g, '');
+    e.target.value = val;
+    if (val) {
+      e.target.classList.add('filled');
+      if (idx < all.length - 1) all[idx + 1].focus();
+      else verifyPin(); // auto-verify on last digit
+    } else {
+      e.target.classList.remove('filled');
+    }
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+      all[idx - 1].focus();
+      all[idx - 1].value = '';
+      all[idx - 1].classList.remove('filled');
+    }
+    if (e.key === 'Enter') verifyPin();
+  });
+  input.addEventListener('paste', e => {
+    e.preventDefault();
+    const digits = (e.clipboardData.getData('text') || '').replace(/[^0-9]/g, '').slice(0, 4);
+    digits.split('').forEach((d, i) => {
+      if (all[i]) {
+        all[i].value = d;
+        all[i].classList.add('filled');
+      }
+    });
+    if (digits.length === 4) verifyPin();
+    else if (all[digits.length]) all[digits.length].focus();
+  });
+});
+
+// Close on outside click
+document.getElementById('admin-modal').addEventListener('click', e => {
+  if (e.target.id === 'admin-modal') closeAdminModal();
+});
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('admin-modal').classList.contains('show')) closeAdminModal();
+});
+</script>
+</body>
+</html>

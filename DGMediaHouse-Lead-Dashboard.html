@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Dashboard | DG Media House</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #fafafa;
+    --bg-soft: #f3f3fb;
+    --bg-card: #ffffff;
+    --primary: #4040cc;
+    --primary-dark: #3232a0;
+    --primary-soft: #e8e8fa;
+    --primary-wash: #f3f3fb;
+    --accent-blue: #99bbe0;
+    --accent-blue-soft: #e1ecf7;
+    --accent-cream: #f2d6a2;
+    --accent-warm: #f7aa29;
+    --dark: #32323c;
+    --text-primary: #32323c;
+    --text-secondary: #5d5d6e;
+    --text-muted: #8b8b99;
+    --border: #eeeeee;
+    --border-strong: #d9d9d9;
+    --success: #16a34a;
+    --warning: #f7aa29;
+    --danger: #ef4444;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    left: -10%;
+    width: 120%;
+    height: 60%;
+    background: radial-gradient(ellipse at 30% 40%, rgba(64, 64, 204, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: white; font-size: 15px;
+    box-shadow: 0 4px 14px rgba(64, 64, 204, 0.25);
+  }
+  .brand-name { font-weight: 700; font-size: 16px; color: var(--dark); }
+  .brand-sub {
+    font-size: 11px; color: var(--text-muted);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: white;
+    color: var(--text-primary);
+    transition: all 0.15s ease;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--bg-soft); border-color: var(--primary); color: var(--primary); }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .btn-primary:hover { background: var(--primary-dark); color: white; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(64, 64, 204, 0.25); }
+  .btn-danger { color: var(--danger); border-color: #fecaca; }
+  .btn-danger:hover { background: #fee2e2; color: var(--danger); border-color: var(--danger); }
+  .btn-sm { padding: 7px 12px; font-size: 12px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(64, 64, 204, 0.05);
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--dark);
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -1px;
+  }
+  .stat-value.primary { color: var(--primary); }
+  .stat-value.danger { color: var(--danger); }
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .tier-dist {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+  .tier-dist h3 {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  .tier-bars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .tier-bar {
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--bg-soft);
+  }
+  .tier-bar-num {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.5px;
+  }
+  .tier-bar-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  .setup-banner {
+    background: linear-gradient(135deg, var(--primary-soft) 0%, var(--accent-blue-soft) 100%);
+    border: 1px solid rgba(64, 64, 204, 0.15);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .setup-banner .icon { font-size: 22px; flex-shrink: 0; }
+  .setup-banner-text { flex: 1; min-width: 240px; }
+  .setup-banner-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--dark);
+  }
+  .setup-banner-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .setup-banner input {
+    flex: 1;
+    min-width: 260px;
+    padding: 10px 14px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+  }
+  .setup-banner input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(64, 64, 204, 0.08);
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+  }
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(64, 64, 204, 0.08);
+  }
+  .search-wrap::before {
+    content: '⌕';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+  .filter-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 8px 14px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--text-secondary);
+  }
+  .pill:hover { border-color: var(--primary); color: var(--primary); }
+  .pill.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .table-wrap {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead {
+    background: var(--bg-soft);
+  }
+  th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  th:hover { color: var(--primary); }
+  th.sorted::after { content: ' ↓'; color: var(--primary); }
+  th.sorted-asc::after { content: ' ↑'; color: var(--primary); }
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: middle;
+    color: var(--text-primary);
+  }
+  tbody tr {
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  tbody tr:hover { background: var(--bg-soft); }
+  tbody tr.expanded { background: var(--primary-wash); }
+  td.anon { color: var(--text-muted); font-style: italic; }
+
+  .tier-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .badge-healthy { background: #dcfce7; color: #15803d; }
+  .badge-warning { background: #fef3c7; color: #b45309; }
+  .badge-critical { background: #fee2e2; color: #b91c1c; }
+  .badge-emergency { background: #fecaca; color: #991b1b; }
+
+  /* Status Dropdown */
+  .status-select {
+    padding: 5px 26px 5px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1.5px solid;
+    cursor: pointer;
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 10px;
+    transition: filter 0.15s ease, transform 0.1s ease;
+    letter-spacing: 0.2px;
+    min-width: 105px;
+  }
+  .status-select:hover { filter: brightness(0.96); }
+  .status-select:focus { outline: none; box-shadow: 0 0 0 3px rgba(64, 64, 204, 0.15); }
+  .status-new {
+    background-color: #dbeafe; color: #1d4ed8; border-color: #93c5fd;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%231d4ed8' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  }
+  .status-contacted {
+    background-color: #fef3c7; color: #b45309; border-color: #fcd34d;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23b45309' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  }
+  .status-booked {
+    background-color: #e8e8fa; color: #4040cc; border-color: #c7c7f0;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%234040cc' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  }
+  .status-won {
+    background-color: #dcfce7; color: #15803d; border-color: #86efac;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%2315803d' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  }
+  .status-lost {
+    background-color: #f3f4f6; color: #6b7280; border-color: #d1d5db;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  }
+
+  /* Status filter row */
+  .toolbar-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .toolbar-row .filter-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+  }
+  .pill-status {
+    padding: 6px 12px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pill-status:hover { border-color: var(--primary); color: var(--primary); }
+  .pill-status.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .pill-status .count {
+    background: rgba(0,0,0,0.08);
+    padding: 1px 7px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .pill-status.active .count { background: rgba(255,255,255,0.25); }
+
+  .score-cell {
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+  }
+  .score-mini-bar {
+    width: 60px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .score-mini-fill { height: 100%; border-radius: 100px; }
+
+  .expanded-row td {
+    padding: 0;
+    background: var(--bg-soft);
+  }
+  .expanded-content {
+    padding: 24px;
+    border-top: 2px solid var(--primary);
+  }
+  .expanded-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  .info-block .info-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .info-block .info-value {
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    word-break: break-word;
+  }
+  .answers-list {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .answers-list h4 {
+    font-size: 11px;
+    color: var(--primary);
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .answer-row {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .answer-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .answer-cat {
+    font-size: 13px;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+  .answer-cat strong { color: var(--dark); display: block; margin-bottom: 2px; }
+  .answer-score {
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .score-high { color: var(--success); }
+  .score-mid { color: var(--warning); }
+  .score-low { color: var(--danger); }
+
+  .expanded-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+  }
+  .empty-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+  .empty h3 {
+    color: var(--text-secondary);
+    font-size: 17px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 20px 16px; }
+    .expanded-grid { grid-template-columns: 1fr; }
+    th, td { padding: 12px 10px; font-size: 12px; }
+    .tier-bars { grid-template-columns: repeat(2, 1fr); }
+    .hide-mobile { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="brand">
+      <div class="brand-logo">DG</div>
+      <div>
+        <div class="brand-name">Lead Dashboard</div>
+        <div class="brand-sub">Marketing Audit Backend</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="loadFromSheet()">↻ Sync จาก Google Sheet</button>
+      <button class="btn" onclick="importCSV()">⤓ นำเข้า CSV</button>
+      <button class="btn" onclick="exportCSV()">⤴ ส่งออก CSV</button>
+      <button class="btn btn-danger" onclick="clearAll()">🗑 ล้างข้อมูล</button>
+    </div>
+  </div>
+
+  <div class="setup-banner" id="setup-banner">
+    <div class="icon">⚙</div>
+    <div class="setup-banner-text">
+      <div class="setup-banner-title">เชื่อมต่อ Google Sheet</div>
+      <div class="setup-banner-desc">วาง URL ของ Google Sheet ที่ Publish to web เป็น CSV — ดูวิธีใน SETUP-GUIDE.md</div>
+    </div>
+    <input type="text" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv">
+    <button class="btn btn-primary btn-sm" onclick="saveSheetUrl()">บันทึก</button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">จำนวน Lead ทั้งหมด</div>
+      <div class="stat-value primary" id="stat-total">0</div>
+      <div class="stat-sub">คน</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ยังไม่ได้ติดต่อ (Need Follow-up)</div>
+      <div class="stat-value" id="stat-pending" style="color: #1d4ed8;">0</div>
+      <div class="stat-sub">รอ Action จากทีม</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">คะแนนเฉลี่ย</div>
+      <div class="stat-value" id="stat-avg">0</div>
+      <div class="stat-sub">/ 100</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Hot Leads (Critical+Emergency)</div>
+      <div class="stat-value danger" id="stat-hot">0</div>
+      <div class="stat-sub">เหมาะแก่การติดต่อก่อน</div>
+    </div>
+  </div>
+
+  <div class="tier-dist">
+    <h3>การกระจายตัวตามระดับ · Tier Distribution</h3>
+    <div class="tier-bars">
+      <div class="tier-bar">
+        <div class="tier-bar-num" style="color: var(--success);" id="tier-healthy-num">0</div>
+        <div class="tier-bar-label">Healthy (75+)</div>
+      </div>
+      <div class="tier-bar">
+        <div class="tier-bar-num" style="color: var(--warning);" id="tier-warning-num">0</div>
+        <div class="tier-bar-label">Warning (50-74)</div>
+      </div>
+      <div class="tier-bar">
+        <div class="tier-bar-num" style="color: var(--danger);" id="tier-critical-num">0</div>
+        <div class="tier-bar-label">Critical (25-49)</div>
+      </div>
+      <div class="tier-bar">
+        <div class="tier-bar-num" style="color: #991b1b;" id="tier-emergency-num">0</div>
+        <div class="tier-bar-label">Emergency (&lt;25)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="search" placeholder="ค้นหา ชื่อ/แบรนด์/อีเมล..." oninput="renderTable()">
+    </div>
+    <div class="filter-pills">
+      <div class="pill active" data-tier="all" onclick="setTierFilter('all')">ทุกระดับ</div>
+      <div class="pill" data-tier="Healthy" onclick="setTierFilter('Healthy')">Healthy</div>
+      <div class="pill" data-tier="Warning" onclick="setTierFilter('Warning')">Warning</div>
+      <div class="pill" data-tier="Critical" onclick="setTierFilter('Critical')">Critical</div>
+      <div class="pill" data-tier="Emergency" onclick="setTierFilter('Emergency')">Emergency</div>
+    </div>
+  </div>
+
+  <div class="toolbar-row">
+    <span class="filter-label">สถานะ:</span>
+    <div class="pill-status active" data-status="all" onclick="setStatusFilter('all')">
+      ทั้งหมด <span class="count" id="count-all">0</span>
+    </div>
+    <div class="pill-status" data-status="new" onclick="setStatusFilter('new')">
+      ใหม่ <span class="count" id="count-new">0</span>
+    </div>
+    <div class="pill-status" data-status="contacted" onclick="setStatusFilter('contacted')">
+      ติดต่อแล้ว <span class="count" id="count-contacted">0</span>
+    </div>
+    <div class="pill-status" data-status="booked" onclick="setStatusFilter('booked')">
+      นัดแล้ว <span class="count" id="count-booked">0</span>
+    </div>
+    <div class="pill-status" data-status="won" onclick="setStatusFilter('won')">
+      ปิดดีล <span class="count" id="count-won">0</span>
+    </div>
+    <div class="pill-status" data-status="lost" onclick="setStatusFilter('lost')">
+      ไม่สนใจ <span class="count" id="count-lost">0</span>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="leads-table">
+      <thead>
+        <tr>
+          <th data-sort="timestamp" onclick="sortBy('timestamp')">วันที่</th>
+          <th data-sort="name" onclick="sortBy('name')">ชื่อ</th>
+          <th class="hide-mobile" data-sort="brand" onclick="sortBy('brand')">แบรนด์</th>
+          <th class="hide-mobile" data-sort="email" onclick="sortBy('email')">ติดต่อ</th>
+          <th data-sort="score" onclick="sortBy('score')" class="sorted">คะแนน</th>
+          <th data-sort="tier" onclick="sortBy('tier')">ระดับ</th>
+          <th data-sort="status" onclick="sortBy('status')">สถานะ</th>
+        </tr>
+      </thead>
+      <tbody id="leads-tbody"></tbody>
+    </table>
+    <div class="empty" id="empty-state" style="display:none;">
+      <div class="empty-icon">⊘</div>
+      <h3>ยังไม่มีข้อมูล Lead</h3>
+      <p>เมื่อมีคนทำแบบทดสอบและกรอกข้อมูล จะปรากฏที่นี่อัตโนมัติ</p>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="csv-file" accept=".csv" style="display:none" onchange="handleCsvFile(event)">
+
+<script>
+const STORAGE_KEY = 'dgmh_marketing_audit_leads';
+const SHEET_URL_KEY = 'dgmh_sheet_url';
+
+const STATUSES = {
+  new:       { label: 'ใหม่',       cssClass: 'status-new' },
+  contacted: { label: 'ติดต่อแล้ว', cssClass: 'status-contacted' },
+  booked:    { label: 'นัดแล้ว',    cssClass: 'status-booked' },
+  won:       { label: 'ปิดดีล',     cssClass: 'status-won' },
+  lost:      { label: 'ไม่สนใจ',    cssClass: 'status-lost' }
+};
+const STATUS_KEYS = Object.keys(STATUSES);
+
+let leads = [];
+let sortField = 'timestamp';
+let sortAsc = false;
+let tierFilter = 'all';
+let statusFilter = 'all';
+
+function init() {
+  const savedUrl = localStorage.getItem(SHEET_URL_KEY);
+  if (savedUrl) document.getElementById('sheet-url').value = savedUrl;
+  loadLocalLeads();
+  if (savedUrl) loadFromSheet(true);
+}
+
+function loadLocalLeads() {
+  try { leads = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { leads = []; }
+  // Backfill: ensure all leads have a status
+  let changed = false;
+  leads.forEach(l => {
+    if (!l.status || !STATUSES[l.status]) { l.status = 'new'; changed = true; }
+  });
+  if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
+  renderAll();
+}
+
+function persistLeads() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(leads)); } catch (e) { console.warn(e); }
+}
+
+function renderAll() { renderStats(); renderTable(); }
+
+function renderStats() {
+  const total = leads.length;
+  const pending = leads.filter(l => (l.status || 'new') === 'new').length;
+  const avg = total ? Math.round(leads.reduce((s, l) => s + (Number(l.score) || 0), 0) / total) : 0;
+  const hot = leads.filter(l => l.tier === 'Critical' || l.tier === 'Emergency').length;
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-avg').textContent = avg;
+  document.getElementById('stat-hot').textContent = hot;
+
+  const tiers = { Healthy: 0, Warning: 0, Critical: 0, Emergency: 0 };
+  leads.forEach(l => { if (tiers[l.tier] !== undefined) tiers[l.tier]++; });
+  document.getElementById('tier-healthy-num').textContent = tiers.Healthy;
+  document.getElementById('tier-warning-num').textContent = tiers.Warning;
+  document.getElementById('tier-critical-num').textContent = tiers.Critical;
+  document.getElementById('tier-emergency-num').textContent = tiers.Emergency;
+
+  // Status counts (สำหรับ filter pills)
+  const statusCounts = { all: total };
+  STATUS_KEYS.forEach(k => statusCounts[k] = 0);
+  leads.forEach(l => {
+    const s = STATUSES[l.status] ? l.status : 'new';
+    statusCounts[s]++;
+  });
+  STATUS_KEYS.forEach(k => {
+    const el = document.getElementById('count-' + k);
+    if (el) el.textContent = statusCounts[k];
+  });
+  const allEl = document.getElementById('count-all');
+  if (allEl) allEl.textContent = total;
+}
+
+function renderTable() {
+  const search = document.getElementById('search').value.toLowerCase().trim();
+  let filtered = leads.filter(l => {
+    if (tierFilter !== 'all' && l.tier !== tierFilter) return false;
+    if (statusFilter !== 'all') {
+      const s = STATUSES[l.status] ? l.status : 'new';
+      if (s !== statusFilter) return false;
+    }
+    if (search) {
+      const blob = [l.name, l.brand, l.email, l.phone].join(' ').toLowerCase();
+      if (!blob.includes(search)) return false;
+    }
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    let av = a[sortField], bv = b[sortField];
+    if (sortField === 'score') { av = Number(av) || 0; bv = Number(bv) || 0; }
+    else if (sortField === 'status') {
+      // เรียงตามลำดับสถานะ (ใหม่ก่อนเสมอ ปิดดีล/ไม่สนใจไปท้าย)
+      const order = { new: 1, contacted: 2, booked: 3, won: 4, lost: 5 };
+      av = order[a.status || 'new'] || 99;
+      bv = order[b.status || 'new'] || 99;
+    }
+    else { av = String(av || '').toLowerCase(); bv = String(bv || '').toLowerCase(); }
+    if (av < bv) return sortAsc ? -1 : 1;
+    if (av > bv) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  const tbody = document.getElementById('leads-tbody');
+  const empty = document.getElementById('empty-state');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    tbody.innerHTML = filtered.map((l, i) => renderRow(l, i)).join('');
+  }
+
+  document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.classList.remove('sorted', 'sorted-asc');
+    if (th.dataset.sort === sortField) th.classList.add(sortAsc ? 'sorted-asc' : 'sorted');
+  });
+}
+
+function renderRow(l, i) {
+  const date = formatDate(l.timestamp || l.timestamp_th);
+  const name = l.name || '<span class="anon">(ไม่ระบุชื่อ)</span>';
+  const brand = l.brand || '<span class="anon">—</span>';
+  const contact = l.email || l.phone || '<span class="anon">ไม่ทิ้งข้อมูล</span>';
+  const score = Number(l.score) || 0;
+  const scoreColor = score >= 75 ? 'var(--success)' : score >= 50 ? 'var(--warning)' : score >= 25 ? 'var(--danger)' : '#991b1b';
+  const tierClass = 'badge-' + String(l.tier || '').toLowerCase();
+  const status = STATUSES[l.status] ? l.status : 'new';
+  const statusOptions = STATUS_KEYS.map(k =>
+    `<option value="${k}" ${k === status ? 'selected' : ''}>${STATUSES[k].label}</option>`
+  ).join('');
+  return `
+    <tr onclick="toggleExpand('${l.id || i}')">
+      <td style="color: var(--text-muted); font-size: 12px;">${date}</td>
+      <td><strong style="color: var(--dark);">${name}</strong></td>
+      <td class="hide-mobile">${brand}</td>
+      <td class="hide-mobile" style="font-size:13px; color: var(--text-secondary);">${contact}</td>
+      <td class="score-cell" style="color: ${scoreColor};">
+        ${score}
+        <div class="score-mini-bar"><div class="score-mini-fill" style="width:${score}%; background:${scoreColor};"></div></div>
+      </td>
+      <td><span class="tier-badge ${tierClass}">${l.tier || '—'}</span></td>
+      <td onclick="event.stopPropagation()">
+        <select class="status-select ${STATUSES[status].cssClass}"
+                onchange="changeStatus('${l.id}', this.value, event)"
+                onclick="event.stopPropagation()">
+          ${statusOptions}
+        </select>
+      </td>
+    </tr>
+    <tr class="expanded-row" id="exp-${l.id || i}" style="display:none;">
+      <td colspan="7">${renderExpanded(l)}</td>
+    </tr>
+  `;
+}
+
+function changeStatus(leadId, newStatus, ev) {
+  if (ev) ev.stopPropagation();
+  if (!STATUSES[newStatus]) return;
+  const lead = leads.find(l => l.id === leadId);
+  if (!lead) return;
+  lead.status = newStatus;
+  lead.status_updated_at = new Date().toISOString();
+  persistLeads();
+  renderAll();
+}
+
+function setStatusFilter(status) {
+  statusFilter = status;
+  document.querySelectorAll('.pill-status').forEach(p =>
+    p.classList.toggle('active', p.dataset.status === status)
+  );
+  renderTable();
+}
+
+function renderExpanded(l) {
+  const details = Array.isArray(l.details) ? l.details : [];
+  const answersHtml = details.length ? details.map(d => {
+    const sc = Number(d.score) || 0;
+    const cls = sc >= 7 ? 'score-high' : sc >= 4 ? 'score-mid' : 'score-low';
+    return `
+      <div class="answer-row">
+        <div class="answer-cat">
+          <strong>${escapeHtml(d.category || '')}</strong>
+          ${escapeHtml(d.answer || '')}
+        </div>
+        <div class="answer-score ${cls}">${sc}/10</div>
+      </div>
+    `;
+  }).join('') : '<div style="color:var(--text-muted); padding: 8px 0;">ไม่มีรายละเอียดคำตอบ</div>';
+
+  const mailtoSubject = encodeURIComponent('ติดตามผล Marketing Health Check ของ ' + (l.brand || l.name || ''));
+  const mailtoBody = encodeURIComponent(
+    `สวัสดีค่ะ คุณ${l.name || ''}\n\n` +
+    `เห็นว่าคุณได้ทำ Marketing Health Check ของเรา\n` +
+    `ผลคะแนน: ${l.score}/100 (${l.tier})\n\n` +
+    `ทีม DG Media House อยากนัดคุยกับคุณ 30 นาที เพื่อแชร์มุมมองเพิ่มเติม\n` +
+    `ไม่มีค่าใช้จ่าย และไม่ใช่ Sales Call ค่ะ\n\nขอบคุณค่ะ`
+  );
+
+  return `
+    <div class="expanded-content">
+      <div class="expanded-grid">
+        <div class="info-block">
+          <div class="info-label">ชื่อ</div>
+          <div class="info-value">${escapeHtml(l.name) || '<span class="anon">ไม่ระบุ</span>'}</div>
+          <div class="info-label">แบรนด์</div>
+          <div class="info-value">${escapeHtml(l.brand) || '<span class="anon">ไม่ระบุ</span>'}</div>
+          <div class="info-label">อีเมล</div>
+          <div class="info-value">${l.email ? `<a href="mailto:${l.email}" style="color:var(--primary);">${escapeHtml(l.email)}</a>` : '<span class="anon">ไม่ทิ้งข้อมูล</span>'}</div>
+          <div class="info-label">LINE / เบอร์โทร</div>
+          <div class="info-value">${escapeHtml(l.phone) || '<span class="anon">ไม่ทิ้งข้อมูล</span>'}</div>
+          <div class="info-label">วันเวลาที่ทำ</div>
+          <div class="info-value">${escapeHtml(l.timestamp_th || l.timestamp || '')}</div>
+          <div class="info-label">สถานะปัจจุบัน</div>
+          <div class="info-value">
+            <span class="tier-badge ${STATUSES[l.status] ? STATUSES[l.status].cssClass : 'status-new'}" style="border:1.5px solid;">${STATUSES[l.status] ? STATUSES[l.status].label : 'ใหม่'}</span>
+            ${l.status_updated_at ? `<div style="font-size:11px; color: var(--text-muted); margin-top:6px;">อัปเดต: ${formatDate(l.status_updated_at)}</div>` : ''}
+          </div>
+          <div class="info-label">ที่มา (Referrer)</div>
+          <div class="info-value" style="font-size:12px; color: var(--text-muted);">${escapeHtml(l.referrer || 'direct')}</div>
+        </div>
+        <div>
+          <div class="answers-list">
+            <h4>คำตอบทั้ง 10 ข้อ</h4>
+            ${answersHtml}
+          </div>
+        </div>
+      </div>
+      <div class="expanded-actions">
+        ${l.email ? `<a class="btn btn-primary" href="mailto:${l.email}?subject=${mailtoSubject}&body=${mailtoBody}">✉ ส่งอีเมลติดตาม</a>` : ''}
+        ${l.phone ? `<a class="btn" href="tel:${l.phone}">☎ โทรหา</a>` : ''}
+        <button class="btn" onclick="copyLead(event, '${l.id}')">⎘ คัดลอกข้อมูล</button>
+        <button class="btn btn-danger" onclick="deleteLead(event, '${l.id}')">🗑 ลบ</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleExpand(id) {
+  const row = document.getElementById('exp-' + id);
+  if (!row) return;
+  const isOpen = row.style.display !== 'none';
+  document.querySelectorAll('.expanded-row').forEach(r => r.style.display = 'none');
+  if (!isOpen) row.style.display = 'table-row';
+}
+
+function sortBy(field) {
+  if (sortField === field) sortAsc = !sortAsc;
+  else { sortField = field; sortAsc = false; }
+  renderTable();
+}
+
+function setTierFilter(tier) {
+  tierFilter = tier;
+  document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.tier === tier));
+  renderTable();
+}
+
+function copyLead(e, id) {
+  e.stopPropagation();
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+  const text = `ชื่อ: ${lead.name}\nแบรนด์: ${lead.brand}\nอีเมล: ${lead.email}\nเบอร์/LINE: ${lead.phone}\nคะแนน: ${lead.score}/100 (${lead.tier})\nวันที่: ${lead.timestamp_th || lead.timestamp}`;
+  navigator.clipboard.writeText(text).then(() => alert('คัดลอกข้อมูล Lead แล้ว'));
+}
+
+function deleteLead(e, id) {
+  e.stopPropagation();
+  if (!confirm('ลบ Lead นี้?')) return;
+  leads = leads.filter(l => l.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
+  renderAll();
+}
+
+function clearAll() {
+  if (!confirm('ลบข้อมูล Lead ทั้งหมดในเครื่องนี้? (ข้อมูลใน Google Sheet จะไม่ถูกลบ)')) return;
+  leads = [];
+  localStorage.removeItem(STORAGE_KEY);
+  renderAll();
+}
+
+function exportCSV() {
+  if (leads.length === 0) { alert('ยังไม่มีข้อมูล'); return; }
+  const headers = ['Timestamp','Name','Brand','Email','Phone','Score','Tier','Status','Status_Updated','Anonymous','Referrer'];
+  const rows = leads.map(l => [
+    l.timestamp_th || l.timestamp || '', l.name || '', l.brand || '', l.email || '',
+    l.phone || '', l.score || 0, l.tier || '',
+    STATUSES[l.status] ? STATUSES[l.status].label : 'ใหม่',
+    l.status_updated_at || '',
+    l.anonymous ? 'Yes' : 'No', l.referrer || ''
+  ]);
+  const maxDetails = Math.max(0, ...leads.map(l => (l.details || []).length));
+  for (let i = 0; i < maxDetails; i++) headers.push(`Q${i+1}_Category`, `Q${i+1}_Answer`, `Q${i+1}_Score`);
+  leads.forEach((l, idx) => {
+    const details = l.details || [];
+    for (let i = 0; i < maxDetails; i++) {
+      const d = details[i] || {};
+      rows[idx].push(d.category || '', d.answer || '', d.score || '');
+    }
+  });
+  const csv = '﻿' + [headers, ...rows].map(r =>
+    r.map(c => {
+      const s = String(c).replace(/"/g, '""');
+      return /[",\n]/.test(s) ? `"${s}"` : s;
+    }).join(',')
+  ).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `dgmh-leads-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+function importCSV() { document.getElementById('csv-file').click(); }
+
+function handleCsvFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const imported = parseCSV(ev.target.result);
+    if (imported.length === 0) { alert('ไม่พบข้อมูลในไฟล์'); return; }
+    if (!confirm(`พบ ${imported.length} แถว ต้องการเพิ่มเข้า dashboard?`)) return;
+    leads = leads.concat(imported);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
+    renderAll();
+  };
+  reader.readAsText(file);
+}
+
+function parseCSV(text) {
+  text = text.replace(/^﻿/, '');
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const headers = parseLine(lines[0]).map(h => h.trim());
+  const out = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = parseLine(lines[i]);
+    if (cols.length === 0) continue;
+    const obj = {};
+    headers.forEach((h, j) => { obj[h] = cols[j] || ''; });
+    // map Thai label → status key
+    const statusLabel = (obj.Status || obj.status || '').trim();
+    const statusFromLabel = Object.keys(STATUSES).find(k => STATUSES[k].label === statusLabel) || 'new';
+    const lead = {
+      id: 'imported_' + Date.now() + '_' + i,
+      timestamp: obj.Timestamp || obj.timestamp || new Date().toISOString(),
+      timestamp_th: obj.Timestamp || obj.timestamp_th || '',
+      name: obj.Name || obj.name || '',
+      brand: obj.Brand || obj.brand || '',
+      email: obj.Email || obj.email || '',
+      phone: obj.Phone || obj.phone || '',
+      score: Number(obj.Score || obj.score || 0),
+      tier: obj.Tier || obj.tier || inferTier(Number(obj.Score || 0)),
+      status: statusFromLabel,
+      status_updated_at: obj.Status_Updated || obj.status_updated_at || '',
+      anonymous: (obj.Anonymous || '').toLowerCase() === 'yes',
+      referrer: obj.Referrer || obj.referrer || '',
+      details: []
+    };
+    for (let q = 1; q <= 20; q++) {
+      const cat = obj[`Q${q}_Category`];
+      if (cat) lead.details.push({
+        category: cat, answer: obj[`Q${q}_Answer`] || '', score: Number(obj[`Q${q}_Score`] || 0)
+      });
+    }
+    out.push(lead);
+  }
+  return out;
+}
+
+function parseLine(line) {
+  const out = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
+    else if (c === '"') inQ = !inQ;
+    else if (c === ',' && !inQ) { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out;
+}
+
+function inferTier(score) {
+  if (score >= 75) return 'Healthy';
+  if (score >= 50) return 'Warning';
+  if (score >= 25) return 'Critical';
+  return 'Emergency';
+}
+
+function saveSheetUrl() {
+  const url = document.getElementById('sheet-url').value.trim();
+  if (!url) { localStorage.removeItem(SHEET_URL_KEY); alert('ลบ URL แล้ว'); return; }
+  localStorage.setItem(SHEET_URL_KEY, url);
+  alert('บันทึก URL แล้ว — กดปุ่ม Sync เพื่อดึงข้อมูล');
+}
+
+function loadFromSheet(silent) {
+  const url = document.getElementById('sheet-url').value.trim() || localStorage.getItem(SHEET_URL_KEY);
+  if (!url) {
+    if (!silent) alert('กรุณาวาง URL ของ Google Sheet (Publish to web → CSV) ในช่องด้านบนก่อน');
+    return;
+  }
+  fetch(url).then(r => r.text()).then(text => {
+    const imported = parseCSV(text);
+    // เก็บสถานะเดิม (ที่ตั้งใน Dashboard) ไว้ก่อน merge ใหม่
+    const existingStatuses = {};
+    leads.forEach(l => {
+      const key = (l.email || '') + '|' + (l.timestamp || '');
+      if (l.status && l.status !== 'new') existingStatuses[key] = { status: l.status, status_updated_at: l.status_updated_at };
+    });
+    const localOnly = leads.filter(l => !l.fromSheet);
+    const fromSheet = imported.map(l => {
+      const key = (l.email || '') + '|' + (l.timestamp || '');
+      const saved = existingStatuses[key];
+      return { ...l, fromSheet: true, status: saved ? saved.status : (l.status || 'new'), status_updated_at: saved ? saved.status_updated_at : l.status_updated_at };
+    });
+    leads = [...fromSheet, ...localOnly.filter(l => !fromSheet.some(s => s.email && s.email === l.email && s.timestamp === l.timestamp))];
+    persistLeads();
+    renderAll();
+    if (!silent) alert(`ดึงข้อมูล ${imported.length} แถวจาก Google Sheet สำเร็จ (สถานะ Lead ที่ตั้งไว้ก่อนหน้าถูกเก็บไว้)`);
+  }).catch(err => {
+    if (!silent) alert('ดึงข้อมูลไม่สำเร็จ: ' + err.message);
+  });
+}
+
+function formatDate(ts) {
+  if (!ts) return '—';
+  try {
+    if (typeof ts === 'string' && ts.includes('/')) return ts.split(',')[0];
+    const d = new Date(ts);
+    return d.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }) +
+           ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+  } catch { return ts; }
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+init();
+</script>
+</body>
+</html>
