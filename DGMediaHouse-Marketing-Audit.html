@@ -83,7 +83,13 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.15s ease;
   }
+  .brand:hover { opacity: 0.85; transform: translateY(-1px); }
+  .brand:hover .brand-logo { box-shadow: 0 6px 18px rgba(64, 64, 204, 0.35); }
   .brand-logo {
     width: 40px;
     height: 40px;
@@ -698,7 +704,7 @@
     line-height: 1.6;
   }
 
-  /* Gap section */
+  /* Gap section (legacy — kept for backward compat) */
   .gaps-card {
     background: white;
     border: 1px solid var(--border);
@@ -756,6 +762,76 @@
     color: var(--text-secondary);
     font-size: 13px;
     line-height: 1.5;
+  }
+
+  /* Narrative Result Sections */
+  .narrative-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 32px 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 28px rgba(64, 64, 204, 0.04);
+  }
+  .narrative-intro {
+    font-size: 13px;
+    color: var(--primary);
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+  }
+  .narrative-intro::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    background: var(--primary);
+  }
+  .narrative-section {
+    padding: 22px 0;
+    border-top: 1px solid var(--border);
+  }
+  .narrative-section:first-of-type { border-top: none; padding-top: 0; }
+  .narrative-section:last-of-type { padding-bottom: 0; }
+  .narrative-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+  }
+  .narrative-title .narr-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .narrative-title.is-strength .narr-icon { background: #dcfce7; color: var(--success); }
+  .narrative-title.is-improve .narr-icon { background: #fef3c7; color: var(--warning); }
+  .narrative-title.is-recommend .narr-icon { background: var(--accent-blue-soft); color: var(--primary-dark); }
+  .narrative-text {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.85;
+    padding-left: 46px;
+  }
+  .narrative-text strong { color: var(--dark); font-weight: 600; }
+  @media (max-width: 640px) {
+    .narrative-card { padding: 24px 20px; }
+    .narrative-text { padding-left: 0; font-size: 14.5px; }
+    .narrative-title { font-size: 16px; }
   }
 
   /* CTA */
@@ -870,13 +946,13 @@
 
   <!-- Nav / Brand -->
   <div class="nav">
-    <div class="brand">
+    <a class="brand" href="#" onclick="goHome(event)" aria-label="กลับสู่หน้าแรก" title="กลับสู่หน้าแรก">
       <div class="brand-logo">DG</div>
       <div>
         <div class="brand-name">DG Media House</div>
         <div class="brand-sub">Data-Driven Marketing</div>
       </div>
-    </div>
+    </a>
     <div class="nav-right">
       <div class="nav-pill">Marketing Health Check</div>
       <button class="edit-btn" onclick="openAdminModal('editor')" title="แก้ไขคำถาม">
@@ -910,47 +986,21 @@
     </div>
   </div>
 
-  <!-- ====== SCREEN 1: LANDING ====== -->
+  <!-- ====== SCREEN 1: LANDING (rendered from landingContent) ====== -->
   <div class="screen active" id="screen-landing">
-    <span class="landing-badge">Self-Check · ใช้เวลา 5 นาที</span>
-    <h1>คุณ <span class="accent">"มองเห็น"</span> การตลาดของแบรนด์ตัวเองชัดแค่ไหน?</h1>
-    <p class="lead">บางครั้งสิ่งที่เราคิดว่า "น่าจะโอเค" อาจมีจุดที่มองไม่เห็นอยู่ ลองตอบ 10 คำถามสั้นๆ เพื่อเช็คตัวเองดู — อาจเจอบางมุมที่ไม่เคยคิดถึง</p>
+    <span class="landing-badge" id="landing-badge">Self-Check · ใช้เวลา 5 นาที</span>
+    <h1 id="landing-title"></h1>
+    <p class="lead" id="landing-lead"></p>
 
-    <div class="stats">
-      <div class="stat">
-        <div>
-          <div class="stat-num">10</div>
-          <div class="stat-label">คำถาม<br>เช็คตัวเอง</div>
-        </div>
-      </div>
-      <div class="stat">
-        <div>
-          <div class="stat-num">~5 นาที</div>
-          <div class="stat-label">ใช้เวลา<br>ไม่นาน</div>
-        </div>
-      </div>
-      <div class="stat">
-        <div>
-          <div class="stat-num">0 ฿</div>
-          <div class="stat-label">ไม่มีค่าใช้จ่าย<br>ไม่ต้องลงทะเบียน</div>
-        </div>
-      </div>
-    </div>
+    <div class="stats" id="landing-stats"></div>
 
     <div class="features">
-      <div class="features-title">เครื่องมือนี้เหมาะกับใคร</div>
-      <ul>
-        <li><span class="check">✓</span>เจ้าของแบรนด์ที่อยากเข้าใจการตลาดของตัวเองในมุมตัวเลข</li>
-        <li><span class="check">✓</span>SME ที่ใช้งบ Marketing แต่ยังไม่แน่ใจว่ามองเห็นภาพรวมพอไหม</li>
-        <li><span class="check">✓</span>คนที่กำลังคิดจะปรับโครงสร้างการตลาด แต่ยังไม่รู้จะเริ่มตรงไหน</li>
-        <li><span class="check">✓</span>คนที่อยากรู้ว่าแบรนด์ของตัวเอง "อยู่จุดไหน" เมื่อเทียบกับมาตรฐาน</li>
-      </ul>
+      <div class="features-title" id="landing-features-title"></div>
+      <ul id="landing-features-list"></ul>
     </div>
 
-    <button class="btn btn-primary btn-large" onclick="startQuiz()">
-      ลองเช็คดู →
-    </button>
-    <p class="micro">ผลลัพธ์เป็นแค่ภาพสะท้อน ไม่มีถูกผิด · ใช้เพื่อเข้าใจตัวเองมากขึ้น</p>
+    <button class="btn btn-primary btn-large" id="landing-cta" onclick="startQuiz()"></button>
+    <p class="micro" id="landing-micro"></p>
   </div>
 
   <!-- ====== SCREEN 2: QUIZ ====== -->
@@ -973,36 +1023,39 @@
     </div>
   </div>
 
-  <!-- ====== SCREEN 3: EMAIL CAPTURE ====== -->
+  <!-- ====== SCREEN 3: LEAD CAPTURE ====== -->
   <div class="screen" id="screen-capture">
     <div class="capture-card">
       <div class="capture-icon">✦</div>
       <h2 style="font-size: 26px; margin-bottom: 12px; color: var(--dark); letter-spacing: -0.5px;">เกือบเสร็จแล้ว</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 28px; line-height: 1.6;">ก่อนดูผล ฝากชื่อกับช่องทางติดต่อไว้หน่อย เผื่อเราอยากส่งข้อมูลเพิ่มเติม<br>ที่เกี่ยวข้องกับผลของคุณไปให้ (ไม่บังคับนะคะ ข้ามไปก็ได้)</p>
+      <p style="color: var(--text-secondary); margin-bottom: 28px; line-height: 1.6;">ก่อนดูผล ขอข้อมูลติดต่อสักหน่อย<br>เพื่อให้ทีมเราส่งสรุปผลและคำแนะนำเฉพาะแบรนด์คุณกลับไปได้</p>
 
       <div class="form-group">
-        <label>ชื่อเรียกของคุณ</label>
-        <input type="text" id="user-name" placeholder="เช่น คุณสมชาย หรือเรียกว่าอะไรก็ได้">
+        <label>ชื่อ-นามสกุล <span style="color: var(--danger);">*</span></label>
+        <input type="text" id="user-name" placeholder="เช่น สมชาย ใจดี">
       </div>
       <div class="form-group">
-        <label>ชื่อแบรนด์ของคุณ</label>
-        <input type="text" id="user-brand" placeholder="ชื่อแบรนด์/บริษัท">
+        <label>เบอร์โทร <span style="color: var(--danger);">*</span></label>
+        <input type="tel" id="user-phone" placeholder="08X-XXX-XXXX">
       </div>
       <div class="form-group">
-        <label>อีเมล</label>
+        <label>อีเมล <span style="color: var(--danger);">*</span></label>
         <input type="email" id="user-email" placeholder="your@email.com">
       </div>
       <div class="form-group">
-        <label>LINE ID หรือเบอร์โทร (ถ้าสะดวก)</label>
-        <input type="text" id="user-phone" placeholder="ไม่บังคับ">
+        <label>บริษัท <span style="color: var(--danger);">*</span></label>
+        <input type="text" id="user-company" placeholder="ชื่อบริษัท / แบรนด์">
+      </div>
+      <div class="form-group">
+        <label>ตำแหน่งงาน <span style="color: var(--danger);">*</span></label>
+        <input type="text" id="user-position" placeholder="เช่น Marketing Manager, เจ้าของกิจการ">
       </div>
 
       <button class="btn btn-primary btn-large" style="width: 100%; margin-top: 12px;" onclick="showResults()">
         ดูผลของฉัน →
       </button>
-      <p class="micro" style="margin-top: 14px;">
-        <a href="#" onclick="skipCapture(event)" style="color: var(--text-muted); text-decoration: underline;">ข้ามไป ขอดูผลเลย</a>
-        · ข้อมูลของคุณจะถูกเก็บอย่างปลอดภัย
+      <p class="micro" style="margin-top: 14px; text-align: center;">
+        กรุณากรอกข้อมูลให้ครบทั้ง 5 ช่อง · ข้อมูลของคุณจะถูกเก็บอย่างปลอดภัย
       </p>
     </div>
   </div>
@@ -1027,10 +1080,29 @@
       <p class="result-desc" id="result-desc">กำลังประมวลผล...</p>
     </div>
 
-    <!-- Gap Analysis -->
-    <div class="gaps-card">
-      <div class="gaps-title">จุดที่แบรนด์ของคุณขาด · Gap Analysis</div>
-      <div id="gaps-list"></div>
+    <!-- Narrative Summary (human-friendly) -->
+    <div class="narrative-card">
+      <div class="narrative-intro">สรุปผลของแบรนด์คุณ</div>
+
+      <div class="narrative-section">
+        <h3 class="narrative-title"><span class="narr-icon">📊</span>ภาพรวม</h3>
+        <p class="narrative-text" id="result-overview"></p>
+      </div>
+
+      <div class="narrative-section">
+        <h3 class="narrative-title is-strength"><span class="narr-icon">✨</span>จุดแข็งที่คุณมี</h3>
+        <p class="narrative-text" id="result-strengths"></p>
+      </div>
+
+      <div class="narrative-section">
+        <h3 class="narrative-title is-improve"><span class="narr-icon">🎯</span>จุดที่ควรลองปรับ</h3>
+        <p class="narrative-text" id="result-improvements"></p>
+      </div>
+
+      <div class="narrative-section">
+        <h3 class="narrative-title is-recommend"><span class="narr-icon">💡</span>สิ่งที่แนะนำให้ทำต่อ</h3>
+        <p class="narrative-text" id="result-recommendations"></p>
+      </div>
     </div>
 
     <!-- CTA -->
@@ -1067,6 +1139,27 @@
 // ============================================================
 const SHEETS_WEBHOOK_URL = '';
 const STORAGE_KEY = 'dgmh_marketing_audit_leads';
+
+// ========== LANDING PAGE CONTENT (แก้ผ่าน Question Editor ได้) ==========
+const landingContent = {
+  badge: "Self-Check · ใช้เวลา 5 นาที",
+  titleHtml: 'คุณ <span class="accent">"มองเห็น"</span> การตลาดของแบรนด์ตัวเองชัดแค่ไหน?',
+  lead: 'บางครั้งสิ่งที่เราคิดว่า "น่าจะโอเค" อาจมีจุดที่มองไม่เห็นอยู่ ลองตอบ 10 คำถามสั้นๆ เพื่อเช็คตัวเองดู — อาจเจอบางมุมที่ไม่เคยคิดถึง',
+  stats: [
+    { num: "10", label: "คำถาม<br>เช็คตัวเอง" },
+    { num: "~5 นาที", label: "ใช้เวลา<br>ไม่นาน" },
+    { num: "0 ฿", label: "ไม่มีค่าใช้จ่าย<br>ไม่ต้องลงทะเบียน" }
+  ],
+  featuresTitle: "เครื่องมือนี้เหมาะกับใคร",
+  features: [
+    "เจ้าของแบรนด์ที่อยากเข้าใจการตลาดของตัวเองในมุมตัวเลข",
+    "SME ที่ใช้งบ Marketing แต่ยังไม่แน่ใจว่ามองเห็นภาพรวมพอไหม",
+    "คนที่กำลังคิดจะปรับโครงสร้างการตลาด แต่ยังไม่รู้จะเริ่มตรงไหน",
+    "คนที่อยากรู้ว่าแบรนด์ของตัวเอง \"อยู่จุดไหน\" เมื่อเทียบกับมาตรฐาน"
+  ],
+  ctaText: "ลองเช็คดู →",
+  micro: "ผลลัพธ์เป็นแค่ภาพสะท้อน ไม่มีถูกผิด · ใช้เพื่อเข้าใจตัวเองมากขึ้น"
+};
 
 // ========== QUIZ DATA ==========
 const questions = [
@@ -1192,11 +1285,121 @@ const questions = [
   }
 ];
 
+// ========== FRIENDLY NARRATIVES (อธิบายผลแบบภาษาคน) ==========
+// Map 1:1 กับ questions ด้านบน — ใช้สร้างสรุปผลในหน้า Results
+// strength: พูดถึงสิ่งที่เขาทำได้ดีเมื่อตอบคะแนนสูง
+// improve: พูดถึงสิ่งที่ยังขาดเมื่อตอบคะแนนต่ำ
+// recommend: บอกสิ่งที่แนะนำให้ลองทำต่อ
+const categoryNarratives = [
+  {
+    friendly: "การเห็นตัวเลขแบบทันที",
+    strength: "คุณสามารถดูตัวเลขสำคัญของแบรนด์ได้ตลอดเวลา ทำให้ตัดสินใจได้รวดเร็วโดยไม่ต้องรอใคร",
+    improve: "ตอนนี้ยังต้องรอข้อมูลสรุปเป็นรอบๆ ทำให้กว่าจะรู้ว่าเกิดอะไรขึ้นก็มักจะช้าไปนิด",
+    recommend: "ลองตั้งระบบหน้าจอเล็กๆ ที่รวมยอดขายกับค่าโฆษณาให้ดูได้ทุกวัน เพื่อเห็นภาพรวมในเวลาเดียวกัน"
+  },
+  {
+    friendly: "การคุมงบการตลาด",
+    strength: "คุณรู้ตลอดเวลาว่าใช้งบการตลาดไปเท่าไร เหลือเท่าไร ทำให้ปรับเปลี่ยนทันสถานการณ์ได้",
+    improve: "การติดตามงบการตลาดยังไม่ค่อยเป็นระบบ ทำให้บางครั้งใช้งบเกินตัวโดยไม่รู้ตัว",
+    recommend: "วางระบบติดตามงบรายช่องทาง เพื่อให้รู้แต่ละต้นเดือนว่ามีงบเท่าไหร่ ใช้ไปเท่าไหร่แล้ว"
+  },
+  {
+    friendly: "การตั้งเป้าหมายที่ชัดเจน",
+    strength: "แบรนด์คุณมีเป้าหมายที่จับต้องได้ วัดผลได้จริง และทบทวนสม่ำเสมอ ทำให้ทีมไม่หลงทิศ",
+    improve: "เป้าหมายของแบรนด์ยังกว้างไป หรือยังไม่ได้กลับมาทบทวนบ่อยพอ ทำให้ทีมอาจไม่รู้ว่ากำลังเดินไปทางไหน",
+    recommend: "กำหนดเป้าหมายให้ชัดเจน เป็นตัวเลขที่วัดได้ภายในกรอบเวลาที่ชัด แล้วนัดทบทวนกันทุกสัปดาห์/เดือน"
+  },
+  {
+    friendly: "การวางแผนล่วงหน้า",
+    strength: "คุณมีการคาดการณ์ยอดขายและงบไว้ล่วงหน้า ทำให้รู้ว่าต้องลงทุนเท่าไหร่ถึงจะได้ผลตามเป้า",
+    improve: "ตอนนี้ยังตัดสินใจจากความรู้สึกหรือเดาจากปีก่อน ซึ่งอาจไม่ตรงกับสถานการณ์จริง",
+    recommend: "ลองทำแผนคาดการณ์ยอดขาย-งบล่วงหน้า 3-6 เดือน เริ่มแบบง่ายๆ ก่อนได้ ดีกว่าไม่มีเลย"
+  },
+  {
+    friendly: "การรวมข้อมูลจากทุกช่องทาง",
+    strength: "ข้อมูลทั้งจากออนไลน์และหน้าร้านของคุณดูที่เดียวกันได้ ทำให้เห็นภาพรวมธุรกิจครบในจอเดียว",
+    improve: "ข้อมูลแบรนด์คุณยังกระจัดกระจายอยู่หลายที่ ทำให้กว่าจะปะติดปะต่อภาพรวมได้ก็เสียเวลามาก",
+    recommend: "ค่อยๆ รวมข้อมูลจากแต่ละช่องทางเข้ามาที่เดียว เริ่มจาก 2-3 ช่องทางหลักก่อน แล้วค่อยขยาย"
+  },
+  {
+    friendly: "การวัดความคุ้มค่าของเงินที่ลงทุน",
+    strength: "คุณรู้แน่ชัดว่าทุกบาทที่ลงไปสร้างยอดกลับมาเท่าไหร่ ทำให้เลือกลงทุนได้คุ้มที่สุด",
+    improve: "ยังไม่ค่อยรู้ว่าค่าโฆษณาแต่ละบาทคุ้มค่าแค่ไหน ทำให้อาจลงเงินผิดที่โดยไม่รู้ตัว",
+    recommend: "เริ่มจากการวัดผลรายแคมเปญง่ายๆ ก่อน เช่น แคมเปญนี้ลงไปเท่าไหร่ ได้ยอดกลับมาเท่าไหร่"
+  },
+  {
+    friendly: "การติดตามการเติบโต",
+    strength: "คุณเห็นเส้นการเติบโตของแบรนด์ชัดเจน รู้ว่ากำลังโตขึ้นหรือถดถอย เทียบกับเดือนก่อนหรือปีก่อนได้ทันที",
+    improve: "ยังไม่ค่อยได้เปรียบเทียบยอดขายเดือนต่อเดือนหรือปีต่อปีเป็นระบบ ทำให้ยากที่จะเห็นแนวโน้มจริงๆ",
+    recommend: "สร้างตารางหรือกราฟง่ายๆ เปรียบเทียบยอดขายแต่ละเดือน เพื่อให้เห็นภาพแนวโน้มชัดขึ้น"
+  },
+  {
+    friendly: "การทำงานร่วมกับทีมหรือ Agency",
+    strength: "การทำงานระหว่างแบรนด์กับทีมการตลาดมีระบบและกระบวนการที่ชัด ทำให้งานออกมานิ่งและไม่ตกหล่น",
+    improve: "การคุยกับทีมการตลาดยังไม่มีกรอบที่ชัด ทำให้บางครั้งสื่อสารตกหล่นหรือผลลัพธ์ไม่นิ่ง",
+    recommend: "วางกระบวนการทำงานร่วมกันแบบง่ายๆ เช่น มี check-in รายสัปดาห์ และเอกสารกลางที่ทุกคนเห็นเหมือนกัน"
+  },
+  {
+    friendly: "ทิศทางและกลยุทธ์",
+    strength: "แบรนด์คุณมีทิศทางและแผนการตลาดที่ชัด 6-12 เดือนข้างหน้า ทำให้ทุกการตัดสินใจสอดคล้องกัน",
+    improve: "ยังไม่มีแผนการตลาดที่มองไกลพอ ส่วนใหญ่ทำตามสถานการณ์เฉพาะหน้า ซึ่งทำให้ขาด momentum",
+    recommend: "ลองนั่งวางแผนการตลาด 6-12 เดือนข้างหน้าให้เห็นภาพคร่าวๆ ก่อนได้ ไม่ต้องสมบูรณ์แบบ"
+  },
+  {
+    friendly: "ความพร้อมของทีม",
+    strength: "ทีมการตลาดของคุณครอบคลุมงานสำคัญครบ ตั้งแต่วางกลยุทธ์ ดูข้อมูล ไปจนถึงทำคอนเทนต์และยิงโฆษณา",
+    improve: "ทีมการตลาดยังไม่ครอบคลุมงานทั้งหมด ทำให้บางส่วนถูกละเลย โดยเฉพาะเรื่องการวัดผลและวางแผน",
+    recommend: "ระบุก่อนว่าทีมขาดส่วนไหน แล้วเลือกว่าจะเสริมคนหรือใช้พาร์ตเนอร์ภายนอกช่วยเฉพาะส่วนนั้น"
+  }
+];
+
 // ========== STATE ==========
 let currentQ = 0;
 const answers = new Array(questions.length).fill(null);
 
 document.getElementById('q-total').textContent = questions.length;
+
+// ========== RENDER LANDING ==========
+function renderLanding() {
+  const c = (typeof landingContent !== 'undefined') ? landingContent : null;
+  if (!c) return;
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || ''; };
+  const setHtml = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML = val || ''; };
+
+  setText('landing-badge', c.badge);
+  setHtml('landing-title', c.titleHtml);
+  setText('landing-lead', c.lead);
+  setText('landing-features-title', c.featuresTitle);
+  setText('landing-cta', c.ctaText);
+  setText('landing-micro', c.micro);
+
+  // Stats
+  const statsEl = document.getElementById('landing-stats');
+  if (statsEl && Array.isArray(c.stats)) {
+    statsEl.innerHTML = c.stats.map(s => `
+      <div class="stat">
+        <div>
+          <div class="stat-num">${escapeHtml(s.num)}</div>
+          <div class="stat-label">${s.label || ''}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Features list
+  const featEl = document.getElementById('landing-features-list');
+  if (featEl && Array.isArray(c.features)) {
+    featEl.innerHTML = c.features.map(item => `<li><span class="check">✓</span>${escapeHtml(item)}</li>`).join('');
+  }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+renderLanding();
 
 // ========== FUNCTIONS ==========
 function startQuiz() {
@@ -1268,18 +1471,27 @@ function prevQuestion() {
 
 function showResults() {
   const name = document.getElementById('user-name').value.trim();
+  const phone = document.getElementById('user-phone').value.trim();
   const email = document.getElementById('user-email').value.trim();
+  const company = document.getElementById('user-company').value.trim();
+  const position = document.getElementById('user-position').value.trim();
+
+  // Basic validation — ข้อมูลที่จำเป็นต่อการติดต่อกลับ
+  const missing = [];
+  if (!name) missing.push('ชื่อ-นามสกุล');
+  if (!phone) missing.push('เบอร์โทร');
+  if (!email) missing.push('อีเมล');
+  if (!company) missing.push('บริษัท');
+  if (!position) missing.push('ตำแหน่งงาน');
+  if (missing.length > 0) {
+    alert('กรุณากรอกข้อมูลให้ครบทุกช่อง:\n• ' + missing.join('\n• '));
+    return;
+  }
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     alert('รูปแบบอีเมลไม่ถูกต้องค่ะ');
     return;
   }
-  if (name || email) saveLeadData(false);
-  goToResults();
-}
-
-function skipCapture(e) {
-  if (e) e.preventDefault();
-  saveLeadData(true);
+  saveLeadData(false);
   goToResults();
 }
 
@@ -1315,15 +1527,18 @@ function saveLeadData(isAnonymous) {
   else if (total >= 25) tier = 'Critical';
   else tier = 'Emergency';
 
+  const company = isAnonymous ? '' : document.getElementById('user-company').value.trim();
   const leadData = {
     id: 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
     timestamp: new Date().toISOString(),
     timestamp_th: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
     anonymous: isAnonymous,
     name: isAnonymous ? '' : document.getElementById('user-name').value.trim(),
-    brand: isAnonymous ? '' : document.getElementById('user-brand').value.trim(),
-    email: isAnonymous ? '' : document.getElementById('user-email').value.trim(),
     phone: isAnonymous ? '' : document.getElementById('user-phone').value.trim(),
+    email: isAnonymous ? '' : document.getElementById('user-email').value.trim(),
+    company: company,
+    brand: company, // backward compatibility for existing Lead Dashboard
+    position: isAnonymous ? '' : document.getElementById('user-position').value.trim(),
     score: total,
     tier: tier,
     answers: answers.slice(),
@@ -1372,31 +1587,35 @@ function computeResults() {
     document.getElementById('score-fill').style.strokeDashoffset = offset;
   }, 100);
 
-  let tier, tierClass, headline, desc, color;
+  let tier, tierClass, headline, desc, color, overview;
   if (total >= 75) {
-    tier = 'HEALTHY · ระบบดี';
+    tier = 'อยู่ในจุดที่ดี';
     tierClass = 'tier-healthy';
     headline = 'แบรนด์ของคุณ "วัดผลได้"';
-    desc = 'ระบบ Marketing ของคุณอยู่ในเกณฑ์ดี มีการวัดผลและทิศทางที่ชัด อย่างไรก็ตาม ยังมีจุดเล็กๆ ที่ปรับเพิ่มแล้วจะทำให้การเติบโตเร่งขึ้นได้อีก';
+    desc = 'ภาพรวมการตลาดของแบรนด์คุณค่อนข้างพร้อม มีการวัดผลและทิศทางที่ชัดเจน';
     color = 'var(--success)';
+    overview = 'จากที่ตอบมา ภาพรวมของแบรนด์คุณถือว่า <strong>อยู่ในจุดที่ดีมาก</strong> ระบบหลังบ้านของการตลาดทั้งการดูตัวเลข การวางแผน และการวัดผลค่อนข้างครบถ้วน คุณมีฐานที่แข็งแรงพอที่จะต่อยอดได้อีกหลายขั้น เหลือเพียงการปรับจูนรายละเอียดให้แม่นยำขึ้นเรื่อยๆ ก็จะเห็นการเติบโตอย่างต่อเนื่อง';
   } else if (total >= 50) {
-    tier = 'WARNING · ต้องปรับ';
+    tier = 'มาได้ครึ่งทาง';
     tierClass = 'tier-warning';
     headline = 'แบรนด์ของคุณ "เห็นบางส่วน"';
-    desc = 'คุณมีระบบบางอย่างแล้ว แต่ยังมีจุดสำคัญที่ขาดไป โดยเฉพาะด้าน Data Integration และ MROI ทำให้ตัดสินใจช้าและพลาดโอกาสเติบโต';
+    desc = 'มีหลายส่วนทำได้ดีอยู่แล้ว แต่ยังมีบางจุดที่ถ้าเสริมเข้าไปจะเห็นผลชัดเจนขึ้นมาก';
     color = 'var(--warning)';
+    overview = 'จากที่ตอบมา แบรนด์คุณ <strong>มาได้ครึ่งทางแล้ว</strong> มีหลายส่วนที่ทำได้ดี แต่ก็ยังมีอีกหลายเรื่องที่หากเสริมเข้าไป จะทำให้ทุกอย่างไหลลื่นและเห็นผลกว่านี้ได้อีกเยอะ ตอนนี้คุณอาจจะรู้สึกว่ารู้บางเรื่อง แต่ยังต้องเดาบางเรื่อง ซึ่งเป็นจุดที่หลายแบรนด์ติดอยู่นานๆ ถ้าจัดการตรงนี้ได้ การเติบโตจะเร็วขึ้นชัดเจน';
   } else if (total >= 25) {
-    tier = 'CRITICAL · ขาดหลายจุด';
+    tier = 'ยังขาดหลายจุด';
     tierClass = 'tier-critical';
     headline = 'แบรนด์ของคุณ "มองไม่เห็นภาพรวม"';
-    desc = 'ระบบ Marketing ของคุณยังขาดเครื่องมือและ Process หลายจุด ทำให้ใช้เงินไม่คุ้ม และไม่รู้ว่าแคมเปญไหนได้ผลจริง เสี่ยงต่อการเสียโอกาสคู่แข่ง';
+    desc = 'ยังขาดเครื่องมือและระบบสำคัญหลายอย่าง ทำให้ตัดสินใจได้ช้าและใช้เงินอาจไม่คุ้ม';
     color = 'var(--danger)';
+    overview = 'จากที่ตอบมา ตอนนี้แบรนด์คุณ <strong>ยังขาดเครื่องมือสำคัญหลายอย่าง</strong> ทำให้การทำการตลาดอาจรู้สึกเหมือนเดินในหมอก ไม่แน่ใจว่าเงินที่ลงไปได้ผลแค่ไหน และอะไรกำลังเวิร์กจริงๆ ข่าวดีคือ ทุกอย่างเริ่มต้นใหม่ได้ ไม่ต้องรื้อทั้งหมด แค่เริ่มจากจุดที่สำคัญที่สุดก่อน ก็จะเห็นความเปลี่ยนแปลงภายใน 1-2 เดือน';
   } else {
-    tier = 'EMERGENCY · ต้องเริ่มใหม่';
+    tier = 'ต้องเริ่มต้นใหม่';
     tierClass = 'tier-emergency';
-    headline = 'แบรนด์ของคุณ "ทำการตลาดแบบสุ่ม"';
-    desc = 'คุณยังไม่มีระบบวัดผลที่ชัดเจน ทำให้ทุกๆ บาทที่ลง Marketing อาจสูญเปล่า การเริ่มต้นทำ Marketing Audit อย่างเป็นระบบจะเปลี่ยนสถานการณ์ได้ภายใน 30-60 วัน';
+    headline = 'แบรนด์ของคุณ "ทำการตลาดแบบลองไปเรื่อยๆ"';
+    desc = 'ยังไม่มีระบบที่ชัดเจน ทำให้ทุกบาทที่ลงไปเสี่ยงต่อการสูญเปล่า';
     color = 'var(--critical)';
+    overview = 'จากที่ตอบมา ตอนนี้แบรนด์คุณยัง <strong>ทำการตลาดแบบลองผิดลองถูก</strong> เป็นส่วนใหญ่ ซึ่งไม่ใช่เรื่องผิด หลายแบรนด์ก็เริ่มจากตรงนี้ แต่ถ้าเริ่มวางระบบเล็กๆ ได้สักจุด คุณจะรู้สึกว่าทุกบาททุกสตางค์มีความหมายมากขึ้นทันที และจะมองเห็นภาพรวมของธุรกิจชัดเจนขึ้นเรื่อยๆ';
   }
 
   document.getElementById('result-tier').textContent = tier;
@@ -1405,82 +1624,101 @@ function computeResults() {
   document.getElementById('result-desc').textContent = desc;
   document.getElementById('score-fill').style.stroke = color;
 
-  const gaps = [];
-  const remediation = [
-    "ติดตั้งระบบ Real-time Dashboard ดู ads spend + ยอดขายได้ทันที",
-    "เซ็ตระบบ Budget Tracking ที่อัปเดตอัตโนมัติทุกวัน",
-    "กำหนด KPI Framework สไตล์ OKR + ทบทวนรายสัปดาห์",
-    "สร้างโมเดล Forecast 6 เดือน พร้อม Sensitivity Analysis",
-    "เชื่อมต่อ Data ทุก channel (Online + Offline) ในแดชบอร์ดเดียว",
-    "เซ็ตอัป MROI Report รายแคมเปญและช่องทาง",
-    "สร้าง Growth Dashboard ดู MoM/YoY แบบ visual ชัดเจน",
-    "วาง Framework ทำงานร่วมกัน Brand × Agency พร้อม SOP",
-    "ร่าง Marketing Strategy + Roadmap 6-12 เดือน",
-    "วิเคราะห์ Resource Gap และเสริมทีมหรือ outsource ตรงจุด"
-  ];
-
+  // Build human-friendly narrative
+  const narratives = (typeof categoryNarratives !== 'undefined') ? categoryNarratives : [];
+  const strengths = [];
+  const weaknesses = [];
   answers.forEach((a, i) => {
-    const score = a !== null ? questions[i].options[a].score : 0;
-    if (score < 7) {
-      gaps.push({ name: questions[i].category, fix: remediation[i] || '—', critical: score < 4 });
-    }
+    if (a === null) return;
+    const score = questions[i].options[a].score;
+    const narr = narratives[i] || null;
+    if (!narr) return;
+    if (score >= 8) strengths.push(narr);
+    else if (score <= 6) weaknesses.push({ narr, score });
   });
+  weaknesses.sort((a, b) => a.score - b.score);
 
-  let gapsHtml = '';
-  if (gaps.length === 0) {
-    gapsHtml = `
-      <div class="gap-item">
-        <div class="gap-icon ok">✓</div>
-        <div class="gap-content">
-          <div class="gap-name">ยอดเยี่ยม — ไม่พบจุดที่ขาดอย่างมีนัยสำคัญ</div>
-          <div class="gap-fix">แบรนด์ของคุณมีระบบครบถ้วน ทีมเราสามารถช่วยปรับให้ optimize ได้อีกขั้น</div>
-        </div>
-      </div>
-    `;
+  // Strengths paragraph
+  let strengthsText;
+  if (strengths.length === 0) {
+    strengthsText = 'ตอนนี้ยังไม่มีเรื่องไหนที่โดดเด่นมากเป็นพิเศษ แต่ไม่ต้องกังวล — นั่นแปลว่าแค่เริ่มลงมือทำสักเรื่อง คุณก็จะเห็นความแตกต่างได้ทันที';
+  } else if (strengths.length === 1) {
+    strengthsText = 'สิ่งที่แบรนด์คุณทำได้ดีอยู่แล้วคือ ' + strengths[0].strength + ' — ตรงนี้ถือเป็นพื้นฐานที่ดีมาก เก็บรักษาและต่อยอดจากจุดนี้ได้เลย';
   } else {
-    gaps.slice(0, 6).forEach(g => {
-      gapsHtml += `
-        <div class="gap-item">
-          <div class="gap-icon">${g.critical ? '!' : '⚠'}</div>
-          <div class="gap-content">
-            <div class="gap-name">${g.name}</div>
-            <div class="gap-fix">→ ${g.fix}</div>
-          </div>
-        </div>
-      `;
-    });
-    if (gaps.length > 6) {
-      gapsHtml += `
-        <div class="gap-item">
-          <div class="gap-icon more">+</div>
-          <div class="gap-content">
-            <div class="gap-name">และอีก ${gaps.length - 6} จุดที่ทีมเราอยากเล่าให้คุณฟัง</div>
-            <div class="gap-fix">→ จองนัด Free Consult เพื่อรับคำแนะนำเฉพาะแบรนด์ของคุณ</div>
-          </div>
-        </div>
-      `;
+    const parts = strengths.map(s => s.strength);
+    const last = parts.pop();
+    strengthsText = 'สิ่งที่แบรนด์คุณทำได้ดีอยู่แล้วมีหลายเรื่อง — ' + parts.join(' รวมถึง ') + ' และที่สำคัญคือ ' + last + ' จุดเหล่านี้คือพื้นฐานที่แข็งแรง ใช้ต่อยอดได้อีกไกล';
+  }
+
+  // Improvements paragraph
+  let improvementsText;
+  if (weaknesses.length === 0) {
+    improvementsText = 'ไม่พบจุดที่ต้องปรับเร่งด่วน ระบบของคุณค่อนข้างครบถ้วนแล้ว ที่เหลือเป็นเรื่องของการเพิ่มประสิทธิภาพในรายละเอียด';
+  } else {
+    const topWeak = weaknesses.slice(0, 3);
+    const parts = topWeak.map(w => w.narr.improve);
+    if (parts.length === 1) {
+      improvementsText = 'ส่วนที่อยากให้ลองกลับไปดูคือ ' + parts[0];
+    } else {
+      const last = parts.pop();
+      improvementsText = 'มีอยู่ ' + (topWeak.length) + ' เรื่องที่อยากให้ลองกลับไปทบทวน — เรื่องแรกคือ ' + parts.join(' อีกเรื่องคือ ') + ' และเรื่องที่สำคัญไม่แพ้กันคือ ' + last;
+    }
+    if (weaknesses.length > 3) {
+      improvementsText += ' (ยังมีอีก ' + (weaknesses.length - 3) + ' เรื่องที่อยากเล่าให้ฟัง — ทีมเราคุยรายละเอียดให้ฟังได้ในนัด 30 นาที)';
     }
   }
-  document.getElementById('gaps-list').innerHTML = gapsHtml;
+
+  // Recommendations paragraph
+  let recommendationsText;
+  if (weaknesses.length === 0) {
+    recommendationsText = 'แบรนด์คุณอยู่ในจุดที่ดีอยู่แล้ว ขั้นถัดไปคือการ "ขยับจากดี ให้กลายเป็นเก่ง" — ลองคุยกับทีมเราเพื่อหาแนวทางเพิ่มประสิทธิภาพในจุดที่ยังพอปรับได้อีก';
+  } else {
+    const topWeak = weaknesses.slice(0, 3);
+    const recs = topWeak.map(w => w.narr.recommend);
+    if (recs.length === 1) {
+      recommendationsText = 'สิ่งที่แนะนำให้ลองทำต่อคือ ' + recs[0] + ' เริ่มจากเรื่องนี้ก่อน แล้วค่อยขยับไปเรื่องอื่นๆ ทีหลัง';
+    } else {
+      recommendationsText = 'แนะนำให้เริ่มจาก 3 เรื่องนี้ตามลำดับ — เริ่มจาก' + recs[0] + ' จากนั้นค่อย' + recs[1] + ' และสุดท้ายค่อย' + recs[2] + ' การเริ่มทีละเรื่องจะทำให้เห็นผลชัดและไม่รู้สึกหนักเกินไป';
+    }
+  }
+
+  document.getElementById('result-overview').innerHTML = overview;
+  document.getElementById('result-strengths').textContent = strengthsText;
+  document.getElementById('result-improvements').textContent = improvementsText;
+  document.getElementById('result-recommendations').textContent = recommendationsText;
 }
 
 function bookConsult(e) {
   e.preventDefault();
-  const name = document.getElementById('user-name').value.trim();
-  const brand = document.getElementById('user-brand').value.trim();
-  const email = document.getElementById('user-email').value.trim();
-  const phone = document.getElementById('user-phone').value.trim();
+  const v = id => (document.getElementById(id) || {value: ''}).value.trim();
+  const name = v('user-name');
+  const phone = v('user-phone');
+  const email = v('user-email');
+  const company = v('user-company');
+  const position = v('user-position');
   const subject = encodeURIComponent('นัดคุย 30 นาที - Marketing Health Check');
   const body = encodeURIComponent(
-    `สวัสดีค่ะ ทีม DG Media House\n\nฉันได้ทำ Marketing Health Check แล้ว\nและต้องการนัดคุย 30 นาที\n\nชื่อ: ${name}\nแบรนด์: ${brand}\nอีเมล: ${email}\nเบอร์ติดต่อ/LINE: ${phone}\nคะแนน: ${document.getElementById('score-num').textContent}/100\n\nกรุณาติดต่อกลับเพื่อนัดเวลาด้วยค่ะ`
+    `สวัสดีค่ะ ทีม DG Media House\n\nฉันได้ทำ Marketing Health Check แล้ว\nและต้องการนัดคุย 30 นาที\n\nชื่อ-นามสกุล: ${name}\nเบอร์โทร: ${phone}\nอีเมล: ${email}\nบริษัท: ${company}\nตำแหน่งงาน: ${position}\nคะแนน: ${document.getElementById('score-num').textContent}/100\n\nกรุณาติดต่อกลับเพื่อนัดเวลาด้วยค่ะ`
   );
   window.location.href = `mailto:dg.marketing@dgmediahouse.co.th?subject=${subject}&body=${body}`;
 }
 
 function restart() {
+  goHome();
+}
+
+function goHome(e) {
+  if (e) e.preventDefault();
+  // Reset state
   currentQ = 0;
   for (let i = 0; i < answers.length; i++) answers[i] = null;
-  document.getElementById('screen-results').classList.remove('active');
+  // Clear form fields
+  ['user-name', 'user-phone', 'user-email', 'user-company', 'user-position'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  // Switch to landing screen
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-landing').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }

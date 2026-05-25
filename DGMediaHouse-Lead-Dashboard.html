@@ -876,14 +876,16 @@ function renderExpanded(l) {
     <div class="expanded-content">
       <div class="expanded-grid">
         <div class="info-block">
-          <div class="info-label">ชื่อ</div>
+          <div class="info-label">ชื่อ-นามสกุล</div>
           <div class="info-value">${escapeHtml(l.name) || '<span class="anon">ไม่ระบุ</span>'}</div>
-          <div class="info-label">แบรนด์</div>
-          <div class="info-value">${escapeHtml(l.brand) || '<span class="anon">ไม่ระบุ</span>'}</div>
+          <div class="info-label">เบอร์โทร</div>
+          <div class="info-value">${l.phone ? `<a href="tel:${l.phone}" style="color:var(--primary);">${escapeHtml(l.phone)}</a>` : '<span class="anon">ไม่ทิ้งข้อมูล</span>'}</div>
           <div class="info-label">อีเมล</div>
           <div class="info-value">${l.email ? `<a href="mailto:${l.email}" style="color:var(--primary);">${escapeHtml(l.email)}</a>` : '<span class="anon">ไม่ทิ้งข้อมูล</span>'}</div>
-          <div class="info-label">LINE / เบอร์โทร</div>
-          <div class="info-value">${escapeHtml(l.phone) || '<span class="anon">ไม่ทิ้งข้อมูล</span>'}</div>
+          <div class="info-label">บริษัท</div>
+          <div class="info-value">${escapeHtml(l.company || l.brand) || '<span class="anon">ไม่ระบุ</span>'}</div>
+          <div class="info-label">ตำแหน่งงาน</div>
+          <div class="info-value">${escapeHtml(l.position) || '<span class="anon">ไม่ระบุ</span>'}</div>
           <div class="info-label">วันเวลาที่ทำ</div>
           <div class="info-value">${escapeHtml(l.timestamp_th || l.timestamp || '')}</div>
           <div class="info-label">สถานะปัจจุบัน</div>
@@ -935,7 +937,7 @@ function copyLead(e, id) {
   e.stopPropagation();
   const lead = leads.find(l => l.id === id);
   if (!lead) return;
-  const text = `ชื่อ: ${lead.name}\nแบรนด์: ${lead.brand}\nอีเมล: ${lead.email}\nเบอร์/LINE: ${lead.phone}\nคะแนน: ${lead.score}/100 (${lead.tier})\nวันที่: ${lead.timestamp_th || lead.timestamp}`;
+  const text = `ชื่อ-นามสกุล: ${lead.name || ''}\nเบอร์โทร: ${lead.phone || ''}\nอีเมล: ${lead.email || ''}\nบริษัท: ${lead.company || lead.brand || ''}\nตำแหน่งงาน: ${lead.position || ''}\nคะแนน: ${lead.score}/100 (${lead.tier})\nวันที่: ${lead.timestamp_th || lead.timestamp}`;
   navigator.clipboard.writeText(text).then(() => alert('คัดลอกข้อมูล Lead แล้ว'));
 }
 
@@ -956,13 +958,20 @@ function clearAll() {
 
 function exportCSV() {
   if (leads.length === 0) { alert('ยังไม่มีข้อมูล'); return; }
-  const headers = ['Timestamp','Name','Brand','Email','Phone','Score','Tier','Status','Status_Updated','Anonymous','Referrer'];
+  const headers = ['Timestamp','Name','Phone','Email','Company','Position','Score','Tier','Status','Status_Updated','Anonymous','Referrer'];
   const rows = leads.map(l => [
-    l.timestamp_th || l.timestamp || '', l.name || '', l.brand || '', l.email || '',
-    l.phone || '', l.score || 0, l.tier || '',
+    l.timestamp_th || l.timestamp || '',
+    l.name || '',
+    l.phone || '',
+    l.email || '',
+    l.company || l.brand || '',
+    l.position || '',
+    l.score || 0,
+    l.tier || '',
     STATUSES[l.status] ? STATUSES[l.status].label : 'ใหม่',
     l.status_updated_at || '',
-    l.anonymous ? 'Yes' : 'No', l.referrer || ''
+    l.anonymous ? 'Yes' : 'No',
+    l.referrer || ''
   ]);
   const maxDetails = Math.max(0, ...leads.map(l => (l.details || []).length));
   for (let i = 0; i < maxDetails; i++) headers.push(`Q${i+1}_Category`, `Q${i+1}_Answer`, `Q${i+1}_Score`);
@@ -1022,7 +1031,9 @@ function parseCSV(text) {
       timestamp: obj.Timestamp || obj.timestamp || new Date().toISOString(),
       timestamp_th: obj.Timestamp || obj.timestamp_th || '',
       name: obj.Name || obj.name || '',
-      brand: obj.Brand || obj.brand || '',
+      brand: obj.Company || obj.company || obj.Brand || obj.brand || '',
+      company: obj.Company || obj.company || obj.Brand || obj.brand || '',
+      position: obj.Position || obj.position || '',
       email: obj.Email || obj.email || '',
       phone: obj.Phone || obj.phone || '',
       score: Number(obj.Score || obj.score || 0),
